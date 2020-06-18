@@ -1,0 +1,70 @@
+{
+    "totalCount": 2,
+    "dataItems": [
+        {
+            "title": "Basic",
+            "widgets": [
+                {
+                    "name": "SitefinityContentBlock",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "Content block",
+                    "initialProperties": []
+                }
+            ]
+        },
+        {
+            "title": "Content lists",
+            "widgets": [
+                {
+                    "name": "SitefinityContentList",
+                    "title": "Content list",
+                    "addWidgetTitle": "Cards list",
+                    "addWidgetName": "CardsList",
+                    "initialProperties": [
+                        {
+                            "name": "SfViewName",
+                            "value": "CardsList"
+                        }
+                    ]
+                },
+                {
+                    "name": "SitefinityContentList",
+                    "title": "Content list",
+                    "addWidgetTitle": "External list",
+                    "addWidgetName": "ExternalList",
+                    "initialProperties": [
+                        {
+                            "name": "SfViewName",
+                            "value": "ExternalList"
+                        }
+                    ]
+                },
+                {
+                    "name": "SitefinityContentList",
+                    "title": "Content list",
+                    "addWidgetTitle": "List with image",
+                    "addWidgetName": "ListWithImage",
+                    "initialProperties": [
+                        {
+                            "name": "SfViewName",
+                            "value": "ListWithImage"
+                        }
+                    ]
+                },
+                {
+                    "name": "SitefinityContentList",
+                    "title": "Content list",
+                    "addWidgetTitle": "List with summary",
+                    "addWidgetName": "ListWithSummary",
+                    "initialProperties": [
+                        {
+                            "name": "SfViewName",
+                            "value": "ListWithSummary"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

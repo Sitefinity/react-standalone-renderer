@@ -157,7 +157,7 @@ Notice that everywhere above we are using the 'HelloWorld' name to register our 
 
 ## Deployment
 
-There are two deployment techniques that can be levaraged - directly in the CMS(when you have the source code) or through a proxy app such as the Sitefinity .NET Renderer. This is covered and demonstrated [here](https://github.com/Sitefinity/sitefinity-aspnetcore-mvc-samples/tree/gebov/samples-for-14.3/src/standalone-spa-renderers#developing-with-the-client-side-renderers)
+There are two deployment techniques that can be levaraged - directly in the CMS(when you have the source code) or through a proxy app such as the Sitefinity .NET Renderer. This is covered and demonstrated [here](https://github.com/Sitefinity/sitefinity-aspnetcore-mvc-samples/tree/master/src/standalone-spa-renderers#developing-with-the-client-side-renderers)
 
 **NOTE** Be sure to configure the homepage property in [package.json](./package.json). Currently it is configured as '/sitefinity/public/renderers/React'. Both need to be replaced if you plan on develop with the Sitefinity .NET Renderer to '/sfrenderer/renderers/React'
 

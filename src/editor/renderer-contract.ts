@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import sitefinityContentBlockJson from '../components/content-block/designer-metadata.json'
 import sitefinitySectionJson from '../components/section/designer-metadata.json';
 import sitefinityContentListJson from '../components/content-list/designer-metadata.json';
+import sitefinityChartJson from '../components/chart/designer-metadata.json';
 
 import contentWidgetsJson from './designer-metadata/content-widgets.json';
 import layoutWidgetsJson from './designer-metadata/layout-widgets.json';
@@ -13,7 +14,8 @@ export class RendererContractImpl implements RendererContract {
     private metadataMap: { [key: string]: any } = {
         "SitefinityContentBlock": sitefinityContentBlockJson,
         "SitefinitySection": sitefinitySectionJson,
-        "SitefinityContentList": sitefinityContentListJson
+        "SitefinityContentList": sitefinityContentListJson,
+        "SitefinityChart": sitefinityChartJson
     }
 
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata> {

@@ -60,7 +60,7 @@ export function App() {
                         (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
-                }, 100);
+                }, 1000);
             } else if (response.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
                 const lazy = await LayoutService.getLazyComponents(window.location.href);
                 const lazyComponentsMap: {[key: string]: ModelBase<any>} = {};

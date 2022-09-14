@@ -1,4 +1,5 @@
 import React from "react";
+import { ChartComponent } from "../components/chart/chart-component";
 import { ContentBlock } from "../components/content-block/content-block";
 import { ContentList } from "../components/content-list/content-list";
 import { ModelBase } from "../components/interfaces";
@@ -11,7 +12,8 @@ import { RequestContext } from "./request-context";
 export const TYPES_MAP = {
     "SitefinityContentBlock": ContentBlock,
     "SitefinitySection": Section,
-    "SitefinityContentList": ContentList
+    "SitefinityContentList": ContentList,
+    "SitefinityChart": ChartComponent
 };
 
 export class RenderWidgetService {

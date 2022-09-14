@@ -1,0 +1,50 @@
+{
+    "Name":"SitefinityChart",
+    "Caption":"Chart",
+    "PropertyMetadata":[
+       {
+          "Name":"Basic",
+          "Sections":[
+             {
+                "Name":"Main",
+                "Title":null,
+                "Properties":[
+                   {
+                      "Name":"Zoomable",
+                      "DefaultValue":null,
+                      "Title":"Zoomable",
+                      "Type":"bool",
+                      "SectionName":null,
+                      "CategoryName":null,
+                      "Properties":{
+                        
+                      },
+                      "TypeChildProperties":[
+                         
+                      ],
+                      "Position":0
+                   }
+                ],
+                "CategoryName":"Basic"
+             }
+          ]
+       }
+    ],
+    "PropertyMetadataFlat":[
+       {
+          "Name":"Zoomable",
+          "DefaultValue":null,
+          "Title":"Zoomable",
+          "Type":"bool",
+          "SectionName":null,
+          "CategoryName":null,
+          "Properties":{
+                        
+          },
+          "TypeChildProperties":[
+             
+          ],
+          "Position":0
+       }
+    ]
+ }

@@ -141,6 +141,7 @@ Notice that everywhere above we are using the 'HelloWorld' name to register our 
 ## Running in development mode
 Running in dev mode does not require installing additional software. If you wish to hook up the your local react renderer the the remote CMS instance follow these steps:
 
+0. Make sure that the package "http-proxy-middleware" is referenced in the packages.json file.
 1. Run npm install
 2. Go to [the file](/src/setupProxy.js) and set the 'target' property to the URL of the CMS.
 3. Configure the CMS -> 

@@ -5,8 +5,13 @@ import { LazyComponentsResponse } from "./lazy-components.response";
 
 export class LayoutService {
 
-    public static get(pagePathAndQuery: string): Promise<PageLayoutServiceResponse> {
-        return fetch(pagePathAndQuery, { headers: { "X-SFRENDERER-PROXY": "true", "X-SF-WEBSERVICEPATH": "api/default" } }).then(x => x.json());
+    public static get(pagePathAndQuery: string, edit: boolean): Promise<PageLayoutServiceResponse> {
+        let url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePathAndQuery)}'`;
+        if (edit) {
+            url += "&sfaction=edit";
+        }
+
+        return fetch(url).then(x => x.json());
     }
 
     public static getLazyComponents(pagePathAndQuery: string): Promise<LazyComponentsResponse> {

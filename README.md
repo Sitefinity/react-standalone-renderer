@@ -142,7 +142,7 @@ Notice that everywhere above we are using the 'HelloWorld' name to register our 
 Running in dev mode does not require installing additional software. If you wish to hook up the your local react renderer the the remote CMS instance follow these steps:
 
 1. Run npm install
-2. Go to [the file](/src/setupProxy.js) and set the target property to the URL of the CMS.
+2. Go to [the file](/src/setupProxy.js) and set the 'target' property to the URL of the CMS.
 3. Configure the CMS -> 
 3. Setup the CMS to allow proxying requests from localhost
    If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-the-renderer-for-azure-app-services)

@@ -8,10 +8,7 @@ module.exports = function (app) {
             target: '',
             changeOrigin: true,
             onProxyReq: (proxyReq, req, res) => {
-                proxyReq.setHeader('X-ORIGINAL-HOST', 'localhost:5001');
-                proxyReq.getHeaderNames().forEach((header) => {
-                    console.log(`${header} -> ${proxyReq.getHeader(header)}`)
-                })
+                proxyReq.setHeader('X-ORIGINAL-HOST', 'localhost:3000');
             },
             onProxyRes: (proxyRes) => {
             },

@@ -87,23 +87,6 @@ Second - we need to define the designer. This is done by creating a 'designer-me
             }
          ]
       }
-   ],
-   "PropertyMetadataFlat":[
-      {
-         "Name":"Message",
-         "DefaultValue":null,
-         "Title":"Message",
-         "Type":"string",
-         "SectionName":null,
-         "CategoryName":null,
-         "Properties":{
-            
-         },
-         "TypeChildProperties":[
-            
-         ],
-         "Position":0
-      }
    ]
 }
 ```
@@ -154,6 +137,19 @@ Finally we need to register the widget to be shown in the widget selector interf
 ```
 
 Notice that everywhere above we are using the 'HelloWorld' name to register our component. This is a unique identifier for out component and is used everywhere where it is referenced.
+
+## Running in development mode
+Running in dev mode does not require installing additional software. If you wish to hook up the your local react renderer the the remote CMS instance follow these steps:
+
+1. Run npm install
+2. Go to [the file](/src/setupProxy.js) and set the target property to the URL of the CMS.
+3. Configure the CMS -> 
+3. Setup the CMS to allow proxying requests from localhost
+   If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-the-renderer-for-azure-app-services)
+
+   If CMS is hosted on local IIS (Step 5 to 8) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
+5. If CMS is hosted under https and you wish to keep the protocol secure, generate an ssl certificate and reference the files in .env file
+6. Run 'npm start:js' and browse the sitefinity backend
 
 ## Deployment
 

@@ -168,10 +168,6 @@ In order to minimize the cost and not host two applications (as the case with th
 /sitefinity/public/renderers/Angular\
 /sitefinity/public/renderers/React
 
-The above folders can be used for development as well. Just configure the output folder for the build. After the files are deployed, reloading a page will take into account the new files.
-
-**NOTE** Be sure to configure the 'homepage' property in [package.json](./package.json) as '/sitefinity/public/renderers/React'.
-
 ## Deep dive
 ### Building the component
 

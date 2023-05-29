@@ -1,15 +1,16 @@
 const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middleware');
 
 module.exports = function (app) {
+    let host = "localhost";
     app.use(
         ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res"],
         createProxyMiddleware({
             secure: false,
-            target: '',
+            target: `https://${host}`,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyReq: (proxyReq, req, res) => {
-                proxyReq.setHeader('X-ORIGINAL-HOST', 'localhost:3000');
+                proxyReq.setHeader('X-ORIGINAL-HOST', host);
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
                 if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {

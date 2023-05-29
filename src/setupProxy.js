@@ -2,7 +2,7 @@ const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middl
 
 module.exports = function (app) {
     app.use(
-        ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res"],
+        ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge"],
         createProxyMiddleware({
             secure: false,
             target: 'https://localhost',
@@ -16,6 +16,7 @@ module.exports = function (app) {
                 }
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
+                // req.url.indexOf("templates/Default.GetPageTemplates") != -1) { // this should be the real live scenario
                 if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {
                     const response = responseBuffer.toString('utf8');
                     let responseAsJson = JSON.parse(response);
@@ -28,7 +29,7 @@ module.exports = function (app) {
                             Framework: 1,
                             Id: "00000000-0000-0000-0000-000000000000",
                             Name: "React.Default",
-                            ThumbnailUrl : "",
+                            ThumbnailUrl : "/assets/thumbnail-default.png",
                             Title: "Default",
                             UsedByNumberOfPages: 0
                         }]

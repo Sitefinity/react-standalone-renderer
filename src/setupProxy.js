@@ -2,17 +2,17 @@ const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middl
 
 module.exports = function (app) {
     app.use(
-        ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge"],
+        ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge", "/sfres", "/images", "/documents", "/videos"],
         createProxyMiddleware({
             secure: false,
             target: 'https://localhost',
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyReq: (proxyReq, req, res) => {
-                if (process.env.PORT !== 80 && process.env.PORT !== 443) {
+                if (process.env.PORT) {
                     proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:${process.env.PORT}`);
                 } else {
-                    proxyReq.setHeader('X-ORIGINAL-HOST', `localhost`);
+                    proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:3000`);
                 }
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {

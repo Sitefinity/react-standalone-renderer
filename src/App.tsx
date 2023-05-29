@@ -27,7 +27,7 @@ export function App() {
         const getLayout = async () => {
             
             await ServiceMetadata.fetch();
-            const response = await LayoutService.get(window.location.href);
+            const response = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
             if (!response.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
                 setPageData({
                     culture: response.Culture,

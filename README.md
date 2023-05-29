@@ -7,6 +7,15 @@ Progress® Sitefinity® CMS sample react standalone renderer app
 
 The sample code in this repo implements a decoupled frontend SPA renderer for Sitefinity CMS. It uses the Sitefinity Layout API services to render the layout and widget content in Sitefinity MVC pages. This implementation also works with personalized pages and personalized widgets to enable per-user content personalization. The sample code uses the React framework.
 
+## Prerequisites
+
+1. Setup a Sitefinity CMS installation on a shared remote server, so that all developers have access to it.
+2. Configure the CMS:
+   1. In Sitefinity CMS backend, navigate to Administration » Web services.
+   2. Open the Default web service.
+   3. Under Who can access the content by this service?, select Everyone.
+   4. Save your changes.
+
 ## Who is this sample for
 React developers that wish to develop with Sitefinity CMS and the React framework and utilize the WYSIWYG page editor.
 
@@ -87,23 +96,6 @@ Second - we need to define the designer. This is done by creating a 'designer-me
             }
          ]
       }
-   ],
-   "PropertyMetadataFlat":[
-      {
-         "Name":"Message",
-         "DefaultValue":null,
-         "Title":"Message",
-         "Type":"string",
-         "SectionName":null,
-         "CategoryName":null,
-         "Properties":{
-            
-         },
-         "TypeChildProperties":[
-            
-         ],
-         "Position":0
-      }
    ]
 }
 ```
@@ -155,6 +147,19 @@ Finally we need to register the widget to be shown in the widget selector interf
 
 Notice that everywhere above we are using the 'HelloWorld' name to register our component. This is a unique identifier for out component and is used everywhere where it is referenced.
 
+## Running in development mode
+Running in dev mode does not require installing additional software. If you wish to hook up the your local react renderer the the remote CMS instance follow these steps:
+
+1. Run npm install
+2. Go to [the setupProxy file](/src/setupProxy.js) and set the 'target' property to the URL of the CMS.
+3. Setup the CMS to allow proxying requests from localhost
+   If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-sitefinity-cms-for-azure-app-services)
+
+   If CMS is hosted on local IIS (Step 5 to 8) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
+5. If CMS is hosted under https and you wish to keep the protocol secure, generate an ssl certificate and reference the files in .env file. Uncomment the HTTPS setting there as well. An easy way to generate a certificate is to you have dotnet core locally installed and to to run the command: 'dotnet dev-certs https --export-path ./cert.crt --no-password --format PEM' 
+
+6. Run 'npm start:js' and browse the sitefinity backend
+
 ## Deployment
 
 In order to minimize the cost and not host two applications (as the case with the .NET Renderer), the developer can host the production files on the file system of the CMS application under the following folder template(casing is important for the renderer folder):
@@ -162,10 +167,6 @@ In order to minimize the cost and not host two applications (as the case with th
 /sitefinity/public/renderers/{rendererName}\
 /sitefinity/public/renderers/Angular\
 /sitefinity/public/renderers/React
-
-The above folders can be used for development as well. Just configure the output folder for the build. After the files are deployed, reloading a page will take into account the new files.
-
-**NOTE** Be sure to configure the homepage property in [package.json](./package.json). Currently it is configured as '/sitefinity/public/renderers/React'. Both need to be replaced if you plan on develop with the Sitefinity .NET Renderer to '/sfrenderer/renderers/React'
 
 ## Deep dive
 ### Building the component

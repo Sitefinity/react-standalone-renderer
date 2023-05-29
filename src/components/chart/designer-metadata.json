@@ -29,22 +29,5 @@
              }
           ]
        }
-    ],
-    "PropertyMetadataFlat":[
-       {
-          "Name":"Zoomable",
-          "DefaultValue":null,
-          "Title":"Zoomable",
-          "Type":"bool",
-          "SectionName":null,
-          "CategoryName":null,
-          "Properties":{
-                        
-          },
-          "TypeChildProperties":[
-             
-          ],
-          "Position":0
-       }
     ]
  }

@@ -31,8 +31,8 @@
     "typescript": "~4.7.4"
   },
   "scripts": {
-    "start:next": "next dev",
-    "build:next": "next build && next export",
+    "next:start": "next dev",
+    "next:build": "next build && next export -o ./next/export",
     "start": "npm-run-all -p start:js",
     "start:js": "react-scripts start",
     "build": "npm-run-all build:*",

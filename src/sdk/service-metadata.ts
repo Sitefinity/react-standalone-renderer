@@ -6,7 +6,7 @@ export class ServiceMetadata {
     public static fetch(): Promise<ServiceMetadataDefinition> {
         const serviceUrl = RootUrlService.getServiceUrl();
         const metadataUrl = `${serviceUrl}sfmeta`;
-
+        console.log(metadataUrl)
         return fetch(metadataUrl).then(x => x.json()).then(x => {
             this.serviceMetadataCache = x;
             return x;

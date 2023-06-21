@@ -38,9 +38,9 @@ export function Section(props: ModelBase<SectionEntity>) {
                     <source src="{{viewModel.Section.VideoUrl}}" />
                 </video>
             }
-            {data.Columns.map(x => {
+            {data.Columns.map((x, i) => {
                 return (
-                    <div {...x.Attributes} style={data.Section.Style}>
+                    <div key={i} {...x.Attributes} style={data.Section.Style}>
                         {x.Children.map(y => {
                             return RenderWidgetService.createComponent(y.model, y.model.requestContext)
                         })}

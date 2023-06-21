@@ -20,7 +20,7 @@ createRoot(document.body)
     <Provider store={store}>
         <Router>
             <Routes>
-                <Route path="*" element={<App />} />
+                <Route path="*" element={<App metadata={undefined} layout={undefined} />} />
             </Routes>
         </Router>
     </Provider>

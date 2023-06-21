@@ -9,6 +9,7 @@ import sitefinityChartJson from '../components/chart/designer-metadata.json';
 import contentWidgetsJson from './designer-metadata/content-widgets.json';
 import layoutWidgetsJson from './designer-metadata/layout-widgets.json';
 import { RenderWidgetService } from "../services/render-widget-service";
+import { createRoot } from "react-dom/client";
 
 export class RendererContractImpl implements RendererContract {
     private metadataMap: { [key: string]: any } = {
@@ -38,7 +39,8 @@ export class RendererContractImpl implements RendererContract {
             const tempElement = document.createElement("div");
             const component = RenderWidgetService.createComponent(args.model, { DetailItem: null, LazyComponentMap: null });
             
-            ReactDOM.render(component, tempElement);
+            createRoot(tempElement).render(component);
+            // ReactDOM.render(component, tempElement);
             setTimeout(() => {
                 resolve({
                     element: tempElement.firstElementChild as HTMLElement,

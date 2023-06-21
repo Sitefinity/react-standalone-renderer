@@ -7,7 +7,7 @@ import { RenderContext } from './services/render-context';
 import { RenderWidgetService } from './services/render-widget-service';
 import { RequestContext } from './services/request-context';
 import { LayoutService } from './sdk/services/layout.service';
-import { ServiceMetadata } from './sdk/service-metadata';
+import { ServiceMetadata, ServiceMetadataDefinition } from './sdk/service-metadata';
 import { PageLayoutServiceResponse } from './sdk/services/layout-service.response';
 import { CONFIG } from './config';
 import { RootUrlService } from './sdk/root-url.service';
@@ -20,23 +20,32 @@ export interface AppState {
     requestContext: RequestContext
 }
 
-export function App() {
-    const [pageData, setPageData] = useState<AppState>();
-    const location = useLocation();
+type Props = {
+    metadata: ServiceMetadataDefinition | undefined
+    layout: PageLayoutServiceResponse | undefined
+}
 
+export function App({ metadata, layout }: Props) {
+    const [pageData, setPageData] = useState<AppState>();
     useEffect(() => {
         const getLayout = async () => {
             
-            await ServiceMetadata.fetch();
-            const response = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
-            if (!response.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
+            if (!metadata) {
+                await ServiceMetadata.fetch();
+            }
+            
+            if (!layout) {
+                layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
+            }
+            
+            if (!layout.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
                 setPageData({
-                    culture: response.Culture,
-                    siteId: response.SiteId,
-                    content: response.ComponentContext.Components,
-                    id: response.Id,
+                    culture: layout.Culture,
+                    siteId: layout.SiteId,
+                    content: layout.ComponentContext.Components,
+                    id: layout.Id,
                     requestContext: {
-                        DetailItem: response.DetailItem,
+                        DetailItem: layout.DetailItem,
                         LazyComponentMap: null,
                     }
                 });
@@ -47,7 +56,7 @@ export function App() {
                 const timeout = 2000;
                 const start = new Date().getTime();
                 const handle = window.setInterval(() => {
-                    if (!response)
+                    if (!layout)
                         return;
                     
                     window.document.body.setAttribute('data-sfcontainer', 'Body');
@@ -55,14 +64,14 @@ export function App() {
                     // thus we check every 100ms for dom changes. A proper check would be to see if every single
                     // component is rendered
                     const timePassed = new Date().getTime() - start;
-                    if ((response.ComponentContext.Components.length > 0 && window.document.body.childElementCount > 0) || response.ComponentContext.Components.length === 0 || timePassed > timeout) {
+                    if ((layout.ComponentContext.Components.length > 0 && window.document.body.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
                         
                         (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
                 }, 1000);
-            } else if (response.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
+            } else if (layout.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
                 const lazy = await LayoutService.getLazyComponents(window.location.href);
                 const lazyComponentsMap: {[key: string]: ModelBase<any>} = {};
                 lazy.Components.forEach((component) => {
@@ -70,19 +79,19 @@ export function App() {
                 });
 
                 setPageData({
-                    culture: response.Culture,
-                    siteId: response.SiteId,
-                    content: response.ComponentContext.Components,
-                    id: response.Id,
+                    culture: layout.Culture,
+                    siteId: layout.SiteId,
+                    content: layout.ComponentContext.Components,
+                    id: layout.Id,
                     requestContext: {
-                        DetailItem: response.DetailItem,
+                        DetailItem: layout.DetailItem,
                         LazyComponentMap: lazyComponentsMap,
                     }
                 });
             }
 
-            renderSeoMeta(response);
-            renderScripts(response);
+            renderSeoMeta(layout);
+            renderScripts(layout);
         }
 
         getLayout();

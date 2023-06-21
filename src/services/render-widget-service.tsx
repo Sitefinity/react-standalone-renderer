@@ -24,7 +24,7 @@ export class RenderWidgetService {
         }
 
         parseProperties(widgetModel, requestContext);
-        const element = React.createElement(mappedType, widgetModel);
+        const element = React.createElement(mappedType, { key: widgetModel.Id, ...widgetModel }, );
         return element;
     }
 }

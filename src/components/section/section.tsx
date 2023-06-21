@@ -14,12 +14,12 @@ const ColumnNamePrefix = "Column";
 const sectionKey = "Section";
 
 export function Section(props: ModelBase<SectionEntity>) {
-    props.Properties.ColumnsCount = props.Properties.ColumnsCount || 1;
-    props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
     
     const [data, setData] = useState<State>({ Columns: [], Section: { Attributes: {} } });
 
     useEffect(() => {
+        props.Properties.ColumnsCount = props.Properties.ColumnsCount || 1;
+        props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
         const columns = populateColumns(props);
         populateSection(props.Properties).then((section) => {
             const dataAttributes = htmlAttributes(props, null, null);
@@ -32,7 +32,7 @@ export function Section(props: ModelBase<SectionEntity>) {
     }, [props.Properties]);
 
     return (
-        <section {...data.Section.Attributes }>
+        <section {...data.Section.Attributes } style={data.Section.Style}>
             {data.Section.ShowVideo && data.Section.VideoUrl &&
                 <video className="sc-video__element" autoPlay muted loop>
                     <source src="{{viewModel.Section.VideoUrl}}" />
@@ -40,7 +40,7 @@ export function Section(props: ModelBase<SectionEntity>) {
             }
             {data.Columns.map(x => {
                 return (
-                    <div {...x.Attributes}>
+                    <div {...x.Attributes} style={data.Section.Style}>
                         {x.Children.map(y => {
                             return RenderWidgetService.createComponent(y.model, y.model.requestContext)
                         })}
@@ -97,7 +97,7 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
         if (properties.ColumnsBackground && properties.ColumnsBackground.hasOwnProperty(currentName)) {
             const backgroundStyle = properties.ColumnsBackground[currentName];
             if (backgroundStyle.BackgroundType == "Color") {
-                column.Attributes["style"] = `--sf-backgrоund-color: ${backgroundStyle.Color}`;
+                column.Style = { "--sf-background-color": `${backgroundStyle.Color}` };
             }
         }
 
@@ -105,7 +105,7 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
             const columnPadding = properties.ColumnsPadding[currentName];
             const paddings = StyleGenerator.getPaddingClasses(columnPadding);
             if (paddings) {
-                column.Attributes["class"] = paddings;
+                column.Attributes["className"] = paddings;
                 classAttributes.push(paddings);
             }
         }
@@ -117,10 +117,10 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
             }
         }
 
-        if (column.Attributes["class"])
-            classAttributes.push(column.Attributes["class"]);
+        if (column.Attributes["className"])
+            classAttributes.push(column.Attributes["className"]);
 
-        column.Attributes["class"] = classAttributes.filter(x => x).join(" ");
+        column.Attributes["className"] = classAttributes.filter(x => x).join(" ");
 
         columns.push(column);
     }
@@ -156,12 +156,12 @@ function populateSection(properties: SectionEntity): Promise<SectionHolder> {
     }
 
     if (!properties.SectionBackground) {
-        sectionObject.Attributes["class"] = sectionClasses.filter(x => x).join(" ");
+        sectionObject.Attributes["className"] = sectionClasses.filter(x => x).join(" ");
         return Promise.resolve(sectionObject);
     }
 
     if (!properties.SectionBackground) {
-        sectionObject.Attributes["class"] = sectionClasses.filter(x => x).join(" ");
+        sectionObject.Attributes["className"] = sectionClasses.filter(x => x).join(" ");
         return Promise.resolve(sectionObject);
     }
 
@@ -171,7 +171,7 @@ function populateSection(properties: SectionEntity): Promise<SectionHolder> {
             return RestService.getItemWithFallback<VideoItem>(RestSdkTypes.Video, properties.SectionBackground.VideoItem.Id, properties.SectionBackground.VideoItem.Provider).then((video) => {
                 sectionObject.ShowVideo = true;
                 sectionObject.VideoUrl = video.Url;
-                sectionObject.Attributes["class"] = sectionClasses.filter(x => x).join(" ");
+                sectionObject.Attributes["className"] = sectionClasses.filter(x => x).join(" ");
 
                 return sectionObject;
             });
@@ -180,30 +180,29 @@ function populateSection(properties: SectionEntity): Promise<SectionHolder> {
         const imagePosition = properties.SectionBackground.Position || "Fill";
         sectionClasses.push(StylingConfig.ImageBackgroundClass);
         return RestService.getItemWithFallback<ImageItem>(RestSdkTypes.Image, properties.SectionBackground.ImageItem.Id, properties.SectionBackground.ImageItem.Provider).then((image) => {
-            let style = "";
+            let style: { [key: string]: string } = {};
             switch (imagePosition) {
                 case "Fill":
-                    style = "--sf-background-size: 100% auto;";
+                    style["--sf-background-size"] = "100% auto";
                     break;
                 case "Center":
-                    style = "--sf-background-position: center";
+                    style["--sf-background-position"] = "center";
                     break;
                 default:
-                    style = "--sf-background-size: cover;";
+                    style["--sf-background-size"] = "cover";
                     break;
             }
 
-            style = `--sf-backgrоund-image: url(${image.Url});${style}`;
-            sectionObject.Attributes["style"] = style;
-            sectionObject.Attributes["class"] = sectionClasses.filter(x => x).join(" ");
+            style['--sf-background-image'] = `url(${image.Url})`;
+            sectionObject.Style = style;
+            sectionObject.Attributes["className"] = sectionClasses.filter(x => x).join(" ");
             return sectionObject;
         });
     } else if (properties.SectionBackground.BackgroundType === "Color" && properties.SectionBackground.Color) {
-        const style = `--sf-backgrоund-color: ${properties.SectionBackground.Color}`;
-        sectionObject.Attributes["style"] = style;
+        sectionObject.Style = { "--sf-background-color": `${properties.SectionBackground.Color}` }
     }
 
-    sectionObject.Attributes["class"] = sectionClasses.filter(x => x).join(" ");
+    sectionObject.Attributes["className"] = sectionClasses.filter(x => x).join(" ");
     return Promise.resolve(sectionObject);
 }
 

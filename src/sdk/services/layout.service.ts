@@ -11,6 +11,8 @@ export class LayoutService {
             url += "&sfaction=edit";
         }
 
+        url = RootUrlService.getUrl() + url.substring(1);
+
         return fetch(url).then(x => x.json());
     }
 

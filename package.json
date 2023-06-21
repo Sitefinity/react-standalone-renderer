@@ -21,6 +21,8 @@
     "bootstrap": "5.1.3",
     "hammerjs": "^2.0.8",
     "http-proxy-middleware": "^2.0.6",
+    "next": "^13.4.6",
+    "package": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
@@ -29,6 +31,8 @@
     "typescript": "~4.7.4"
   },
   "scripts": {
+    "start:next": "next dev",
+    "build:next": "next build && next export",
     "start": "npm-run-all -p start:js",
     "start:js": "react-scripts start",
     "build": "npm-run-all build:*",

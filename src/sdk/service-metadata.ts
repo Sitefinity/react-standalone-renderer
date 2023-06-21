@@ -1,7 +1,7 @@
 import { RootUrlService } from "./root-url.service";
 
 export class ServiceMetadata {
-    private static serviceMetadataCache: ServiceMetadataDefinition;
+    public static serviceMetadataCache: ServiceMetadataDefinition;
 
     public static fetch(): Promise<ServiceMetadataDefinition> {
         const serviceUrl = RootUrlService.getServiceUrl();
@@ -186,7 +186,7 @@ export class ServiceMetadata {
     }
 }
 
-interface ServiceMetadataDefinition {
+export interface ServiceMetadataDefinition {
     definitions: { [key: string]: any };
     entityContainer: {
         entitySets: { [key: string] : any }

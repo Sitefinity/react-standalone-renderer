@@ -1,3 +1,3 @@
 export const CONFIG = {
-    serviceApi: "api/default"
+    serviceApi: "api/default",
 }

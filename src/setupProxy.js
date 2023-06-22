@@ -5,7 +5,7 @@ module.exports = function (app) {
         ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge", "/sfres", "/images", "/documents", "/videos"],
         createProxyMiddleware({
             secure: false,
-            target: 'https://localhost',
+            target: process.env.PROXY_URL,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyReq: (proxyReq, req, res) => {

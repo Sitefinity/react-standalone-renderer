@@ -3,7 +3,8 @@ import { RenderContext } from '../services/render-context';
 import { LayoutService } from '../sdk/services/layout.service';
 import { ServiceMetadata } from '../sdk/service-metadata';
 import { App } from '../App';
-
+import 'bootstrap/dist/css/bootstrap.css';
+import '@progress/kendo-theme-default/dist/all.css';
 
 export default App;
 

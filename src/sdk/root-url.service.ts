@@ -3,17 +3,17 @@ import { CONFIG } from '../config';
 export class RootUrlService {
     public static getUrl() {
         
-        // when generating static files (true prod build)
+        // when generating static files with next.js (true prod build)
         const isNextStaticRender = typeof window === 'undefined';
         if (isNextStaticRender) {
-            return 'http://localhost/';
+            return `${process.env["NEXT_CMS_URL"]}/`;
         }
         
-        // when developing against a remote hosted CMS (local development)
-        if (process.env.NODE_ENV === 'development') {
-            return `${window.location.origin}/`;
+        // when rendering runtime with next.js
+        if (process.env["NEXT_PUBLIC_CMS_URL"]) {
+            return `${process.env["NEXT_PUBLIC_CMS_URL"]}/`;
         }
-
+        
         // when hosting th bundle in the CMS (for content editors)
         return `${window.location.origin}/`;
     }

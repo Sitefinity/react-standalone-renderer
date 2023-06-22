@@ -32,6 +32,8 @@ export function App({ metadata, layout }: Props) {
             
             if (!metadata) {
                 await ServiceMetadata.fetch();
+            } else {
+                ServiceMetadata.serviceMetadataCache = metadata;
             }
             
             if (!layout) {

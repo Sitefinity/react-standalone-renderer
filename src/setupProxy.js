@@ -29,7 +29,7 @@ module.exports = function (app) {
                             Framework: 1,
                             Id: "00000000-0000-0000-0000-000000000000",
                             Name: "React.Default",
-                            ThumbnailUrl : "/assets/thumbnail-default.png",
+                            ThumbnailUrl: "/assets/thumbnail-default.png",
                             Title: "Default",
                             UsedByNumberOfPages: 0
                         }]

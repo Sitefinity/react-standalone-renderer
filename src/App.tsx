@@ -98,6 +98,12 @@ export function App({ metadata, layout }: Props) {
 
         getLayout();
 
+        const themeCss = document.createElement('link');
+        themeCss.href = 'https://sitthemebuilderapp.telerik.com/cdn/v1/styles/64942be37fe7f1144c07d8ad/theme.css';
+        themeCss.rel = 'stylesheet';
+        themeCss.crossOrigin = 'anonymous';
+        document.head.appendChild(themeCss);
+
     }, []);
 
     return (

@@ -28,7 +28,7 @@ export async function getStaticProps({ params }: Params) {
 }
 
 export async function getStaticPaths() {
-    const slugs = ['/home']
+    const slugs = ['/hackaton-page']
   
     return {
       paths: slugs.map((slug) => {

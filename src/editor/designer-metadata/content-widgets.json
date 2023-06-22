@@ -17,6 +17,27 @@
                     "addWidgetTitle": null,
                     "title": "Chart",
                     "initialProperties": []
+                },
+                {
+                    "name": "SitefinityKendoButton",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "Button",
+                    "initialProperties": []
+                },
+                {
+                    "name": "SitefinityKendoTextBox",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "TextBox",
+                    "initialProperties": []
+                },
+                {
+                    "name": "SitefinityKendoGrid",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "Grid",
+                    "initialProperties": []
                 }
             ]
         },

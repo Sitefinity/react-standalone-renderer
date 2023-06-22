@@ -8,12 +8,18 @@ import { EditorMetadata } from "../editor/editor-metadata";
 import { WidgetModel } from "../editor/interfaces";
 import { RenderContext } from "./render-context";
 import { RequestContext } from "./request-context";
+import { GridComponent } from "../components/grid/grid-component";
+import { ButtonComponent } from "../components/kendo-button/kendo-button";
+import { TextBoxComponent } from "../components/kendo-textbox/kendo-textbox";
 
 export const TYPES_MAP = {
     "SitefinityContentBlock": ContentBlock,
     "SitefinitySection": Section,
     "SitefinityContentList": ContentList,
-    "SitefinityChart": ChartComponent
+    // "SitefinityChart": ChartComponent,
+    "SitefinityKendoButton": ButtonComponent,
+    "SitefinityKendoTextBox": TextBoxComponent,
+    "SitefinityKendoGrid": GridComponent,
 };
 
 export class RenderWidgetService {

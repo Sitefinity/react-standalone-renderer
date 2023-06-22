@@ -2,22 +2,57 @@ import React, { useState, useEffect } from "react";
 import { ModelBase } from "../interfaces";
 import { htmlAttributes } from "../../services/render-widget-service";
 import { RestService } from "../../sdk/rest-service";
-import { Chart, ChartSeries, ChartSeriesItem } from '@progress/kendo-react-charts';
+import {
+  Chart,
+  ChartTitle,
+  ChartSeries,
+  ChartSeriesItem,
+  ChartCategoryAxis,
+  ChartCategoryAxisTitle,
+  ChartCategoryAxisItem,
+  ChartLegend,
+  ChartTooltip,
+} from "@progress/kendo-react-charts";
+import "hammerjs";
 
 export function ChartComponent(props: ModelBase<ChartEntity>) {
-    const data = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
+    const [firstSeries, secondSeries, thirdSeries, fourthSeries] = [
+      [100, 123, 234, 343],
+      [120, 67, 231, 196],
+      [45, 124, 189, 143],
+      [87, 154, 210, 215],
+    ];
+    const categories = ["Q1", "Q2", "Q3", "Q4"];
     const dataAttributes = htmlAttributes(props, null, null);
     return (
         <div {...dataAttributes} >
-            <Chart {...dataAttributes} zoomable={props.Properties.Zoomable}>
-                <ChartSeries>
-                <ChartSeriesItem data={data} name="Fibonacci" />
-                </ChartSeries>
+          <Chart>
+              <ChartTooltip />
+              <ChartLegend position="top" orientation="horizontal" visible/>
+              <ChartTitle text={props.Properties.ChartTitle} />
+              <ChartCategoryAxis>
+                <ChartCategoryAxisItem categories={categories}>
+                  <ChartCategoryAxisTitle text={props.Properties.ChartCategoryAxisTitle} />
+                </ChartCategoryAxisItem>
+              </ChartCategoryAxis>
+              <ChartSeries>
+                <ChartSeriesItem type={props.Properties.SeriesType} gap={2} spacing={0.25} data={firstSeries} name={props.Properties.FirstSeriesName} />
+                <ChartSeriesItem type={props.Properties.SeriesType} data={secondSeries} name={props.Properties.SecondSeriesName}/>
+                <ChartSeriesItem type={props.Properties.SeriesType} data={thirdSeries} name={props.Properties.ThirdSeriesName}/>
+                <ChartSeriesItem type={props.Properties.SeriesType} data={fourthSeries} name={props.Properties.FourthSeriesName}/>
+              </ChartSeries>
             </Chart>
         </div>
     );
 }
 
 interface ChartEntity {
-    Zoomable: boolean,
+    ShowLegend: true,
+    ChartTitle: string,
+    ChartCategoryAxisTitle: string,
+    SeriesType: "column",
+    FirstSeriesName: string,
+    SecondSeriesName: string,
+    ThirdSeriesName: string,
+    FourthSeriesName: string,
 }

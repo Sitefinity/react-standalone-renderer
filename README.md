@@ -155,7 +155,7 @@ Running in dev mode does not require installing additional software. If you wish
 3. Setup the CMS to allow proxying requests from localhost
    If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-sitefinity-cms-for-azure-app-services)
 
-   If CMS is hosted on local IIS (Step 5 to 8) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
+   If CMS is hosted on local IIS (Step 5 to 14) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
 5. If CMS is hosted under https and you wish to keep the protocol secure, generate an ssl certificate and reference the files in .env file. Uncomment the HTTPS setting there as well. An easy way to generate a certificate is to you have dotnet core locally installed and to to run the command: 'dotnet dev-certs https --export-path ./cert.crt --no-password --format PEM' 
 
 6. Run 'npm start:js' and browse the sitefinity backend

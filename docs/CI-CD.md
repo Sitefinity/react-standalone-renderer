@@ -25,7 +25,7 @@ Running in dev mode **does not require installing additional software and works 
 
 ## Running under https
 If you wish to run the local node dev server under https, generate an ssl certificate and reference the files in [.env.development file](/.env.development). Uncomment the HTTPS setting there as well.
-**NOTE -> this requires a valid https certificate to be installed. Checkout [the SSL section](#generating-ssl-certificates-for-local-development)**
+**NOTE -> this requires a valid https certificate to be installed. Checkout [the SSL doc](./SSL.md)**
 
 # Deployment
 

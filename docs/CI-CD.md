@@ -12,6 +12,7 @@ Running in dev mode **does not require installing additional software and works 
     npm i
 ```
 2. Go to [.env.development file](/.env.development) and set the 'PROXY_URL' variable to point to the URL of the CMS.
+
 3. Setup the CMS to allow proxying requests from localhost
 
    If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-sitefinity-cms-for-azure-app-services)
@@ -27,10 +28,26 @@ Running in dev mode **does not require installing additional software and works 
 If you wish to run the local node dev server under https, generate an ssl certificate and reference the files in [.env.development file](/.env.development). Uncomment the HTTPS setting there as well.
 **NOTE -> this requires a valid https certificate to be installed. Checkout [the SSL doc](./SSL.md)**
 
+## Environment variables legend
+
+### Development (.env.development)
+
+* **'PROXY_URL'** -> The URL of the CMS, where to proxy all of the requests that are not pages.
+* **'PROXY_ORIGINAL_HOST'** -> The host of the dev server. Defaults to 'localhost'.
+* **'PROXY_ORIGINAL_HOST'** -> The port of the dev server. Defaults to '5001'.
+
+### Production (.env.production)
+* **'PUBLIC_URL'** -> The root path of the scripts when deployed to the CMS. Defaults to '/sitefinity/public/renderers/React'
+
 # Deployment
 
 When you are ready with the development phase, you must deploy the files to the CMS, so that content editors can start working on building the layout of the pages. This minimizes the cost not host two applications (React Renderer + CMS). The developer hosts the production files on the file system of the CMS application under the following folder template(casing is important for the renderer folder):
 
 /sitefinity/public/renderers/React
 
-The 'PUBLIC_URL' variable sets the root path of the scripts to be equal to '/sitefinity/public/renderers/React'. This is set by default in the [.env.production file](/.env.production).
+Run in the console
+``` bash
+    npm run build
+```
+
+The files are deployed to the build folder. All of the resource URLs are prefixed with '/sitefinity/public/renderers/React' as set in the 'PUBLIC_URL' environment variable.

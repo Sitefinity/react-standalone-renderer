@@ -9,14 +9,13 @@ module.exports = function (app) {
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyReq: (proxyReq, req, res) => {
-                if (process.env.PORT) {
-                    proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:${process.env.PORT}`);
+                if (process.env.PORT && process.env.PROXY_ORIGINAL_HOST) {
+                    proxyReq.setHeader('X-ORIGINAL-HOST', `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`);
                 } else {
                     proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:3000`);
                 }
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
-                // req.url.indexOf("templates/Default.GetPageTemplates") != -1) { // this should be the real live scenario
                 if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {
                     const response = responseBuffer.toString('utf8');
                     let responseAsJson = JSON.parse(response);

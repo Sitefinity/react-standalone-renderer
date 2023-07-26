@@ -117,7 +117,7 @@ export const sampleProducts = [{
     "Description": "Dried fruit and bean curd"
   },
   "FirstOrderedOn": new Date(1996, 7, 22)
-}, {
+},  {
   "ProductID": 8,
   "ProductName": "Northwoods Cranberry Sauce",
   "SupplierID": 3,

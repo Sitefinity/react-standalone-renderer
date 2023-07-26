@@ -52,8 +52,8 @@ export function App({ metadata, layout }: Props) {
                     }
                 });
             }
-
-            window.document.body.classList.add("container-fluid");
+            
+            getRootElement().classList.add("container-fluid");
             if (RenderContext.isEdit()) {
                 const timeout = 2000;
                 const start = new Date().getTime();
@@ -61,12 +61,13 @@ export function App({ metadata, layout }: Props) {
                     if (!layout)
                         return;
                     
-                    window.document.body.setAttribute('data-sfcontainer', 'Body');
+                    document.body.setAttribute('data-sfcontainer', '')
+                    getRootElement().setAttribute('data-sfcontainer', 'Body');
                     // we do not know the exact time when react has finished the rendering process.
                     // thus we check every 100ms for dom changes. A proper check would be to see if every single
                     // component is rendered
                     const timePassed = new Date().getTime() - start;
-                    if ((layout.ComponentContext.Components.length > 0 && window.document.body.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
+                    if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
                         
                         (window as any)["rendererContract"] = new RendererContractImpl();
@@ -130,7 +131,7 @@ function renderScripts(response: PageLayoutServiceResponse) {
             scriptElement.innerText = script.Value;
         }
 
-        document.body.appendChild(scriptElement);
+        getRootElement().appendChild(scriptElement);
     });
 }
 
@@ -170,4 +171,8 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
             document.head.appendChild(linkElement);
         }
     }
+}
+
+export function getRootElement(): HTMLElement {
+    return (document.getElementById("root") || document.getElementById("__next")) as HTMLElement;
 }

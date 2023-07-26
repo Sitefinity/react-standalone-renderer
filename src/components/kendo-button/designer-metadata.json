@@ -31,9 +31,9 @@
                     "Type":"string",
                     "SectionName":null,
                     "CategoryName":null,
-                    "Properties":{
-
-                    },
+                    "Properties": {
+                        "Meta_Description_Description":"For a full list of icons visit -> https://www.telerik.com/kendo-angular-ui/components/icons/icon/icon-list"
+                     },
                     "TypeChildProperties":[
 
                     ],

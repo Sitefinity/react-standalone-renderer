@@ -63,16 +63,14 @@ export class RestService {
             "$select": filteredSimpleFields.join(','),
             "$expand": filteredRelatedFields.join(','),
             "$skip": args.Skip,
-            "$take": args.Take,
-            "$filter": new ODataFilterSerializer().serialize({ Type: args.Type, Filter: args.Filter })
+            "$top": args.Take,
+            "$filter": args.Filter ? new ODataFilterSerializer().serialize({ Type: args.Type, Filter: args.Filter }) : null
         };
 
         queryParamsForMethod = Object.assign(queryParamsForMethod, args.AdditionalQueryParams);
 
         const wholeUrl = `${this.buildItemBaseUrl(args.Type)}${this.buildQueryParams(queryParamsForMethod)}`;
-
         return fetch(wholeUrl).then((x => x.json())).then((x) => {
-            debugger;
             return <CollectionResponse<T>>{ Items: x.value, TotalCount: x["@odata.count"] }
         });
     }
@@ -201,7 +199,7 @@ export class RestService {
 
         return result;
     }
-    
+
     public static buildItemBaseUrl(itemType: string): string {
         const serviceUrl = RootUrlService.getServiceUrl();
         const setName = ServiceMetadata.getSetNameFromType(itemType);

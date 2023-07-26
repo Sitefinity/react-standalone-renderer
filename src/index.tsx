@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import App, { getRootElement } from './App';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import { store } from './store/store';
@@ -14,7 +13,7 @@ import {
     Routes
 } from "react-router-dom";
 
-createRoot(document.body)
+createRoot(getRootElement())
 .render(
     // <React.StrictMode>
     <Provider store={store}>

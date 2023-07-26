@@ -42,7 +42,7 @@
     "typescript": "~4.7.4"
   },
   "scripts": {
-    "next:start": "next dev",
+    "next:start": "node server.js",
     "next:build": "next build && next export -o ./next/export",
     "start": "npm-run-all -p start:js",
     "start:js": "react-scripts start",

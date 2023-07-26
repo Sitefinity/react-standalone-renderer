@@ -32,7 +32,7 @@ export async function getStaticProps({ params }: Params) {
 export async function getStaticPaths() {
     const getAllArgs: GetAllArgs = {
         Skip: 0,
-        Take: 1,
+        Take: 50,
         Count: true,
         Fields: ["ViewUrl", "Renderer"],
         Type: "Telerik.Sitefinity.Pages.Model.PageNode",

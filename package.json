@@ -42,16 +42,10 @@
     "typescript": "~4.7.4"
   },
   "scripts": {
-    "next:start": "node server.js",
+    "next:start:https": "node server.js",
+    "next:start": "next dev",
     "next:build": "next build && next export -o ./next/export",
-    "start": "npm-run-all -p start:js",
-    "start:js": "react-scripts start",
-    "build": "npm-run-all build:*",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "starst:js": "react-scripts-ts start",
-    "build:js": "react-scripts build",
-    "builds:js": "react-scripts-ts build"
+    "start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"

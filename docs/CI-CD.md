@@ -19,7 +19,7 @@ Running in dev mode **does not require installing additional software and works 
 
    If CMS is hosted on local IIS (Step 5 to 14) -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
 
-   Configure the CMS web service -> Follow the instructions [here](https://www.progress.com/documentation/sitefinity-cms/host-sitefinity-cms-and-the-.net-core-renderer-on-the-same-iis)
+   Configure the CMS web service -> Follow the instructions [here](https://www.progress.com/documentation/sitefinity-cms/setup-the-asp.net-core-renderer#configure-sitefinity-cms)
 
 4. Run in the console
 ``` bash

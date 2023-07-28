@@ -6,9 +6,31 @@ import { LazyComponentsResponse } from "./lazy-components.response";
 export class LayoutService {
 
     public static get(pagePathAndQuery: string, edit: boolean): Promise<PageLayoutServiceResponse> {
-        let url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePathAndQuery)}'`;
+        let url = null;
+        
+        let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");
+        if (indexOfSitefinityTemplate > 0) {
+            let id = null;
+            let indexOfGuid = indexOfSitefinityTemplate + "Sitefinity/Template/".length;
+            let nextIndexOfSlash = pagePathAndQuery.indexOf("/", indexOfGuid);
+            if (nextIndexOfSlash === -1) {
+                id = pagePathAndQuery.substring(indexOfGuid);
+            } else {
+                id = pagePathAndQuery.substring(indexOfGuid, nextIndexOfSlash);
+            }
+
+            url = `/api/default/templates/${id}/Default.Model()`
+        } else {
+            url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePathAndQuery)}'`;
+        }
+
         if (edit) {
-            url += "&sfaction=edit";
+            let concatChar = '?';
+            if (url.indexOf(concatChar) !== -1) {
+                concatChar = '&';
+            }
+
+            url += `${concatChar}sfaction=edit`;
         }
 
         url = RootUrlService.getUrl() + url.substring(1);

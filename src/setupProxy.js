@@ -2,7 +2,7 @@ const { createProxyMiddleware, responseInterceptor } = require('http-proxy-middl
 
 module.exports = function (app) {
     app.use(
-        ["/sitefinity", "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge", "/sfres", "/images", "/documents", "/videos"],
+        [/\/sitefinity(?!\/template)/i, "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge", "/sfres", "/images", "/documents", "/videos"],
         createProxyMiddleware({
             secure: false,
             target: process.env.PROXY_URL,

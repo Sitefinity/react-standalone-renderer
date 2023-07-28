@@ -12,13 +12,6 @@
                     "initialProperties": []
                 },
                 {
-                    "name": "SitefinityChart",
-                    "addWidgetName": null,
-                    "addWidgetTitle": null,
-                    "title": "Chart",
-                    "initialProperties": []
-                },
-                {
                     "name": "SitefinityKendoButton",
                     "addWidgetName": null,
                     "addWidgetTitle": null,

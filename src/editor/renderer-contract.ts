@@ -19,7 +19,7 @@ export class RendererContractImpl implements RendererContract {
         "SitefinityContentBlock": sitefinityContentBlockJson,
         "SitefinitySection": sitefinitySectionJson,
         "SitefinityContentList": sitefinityContentListJson,
-        "SitefinityChart": sitefinityChartJson,
+        // "SitefinityChart": sitefinityChartJson,
         "SitefinityKendoButton": sitefinityButtonJson,
         "SitefinityKendoTextBox":sitefinityTextBoxJson,
         "SitefinityKendoGrid": sitefinityGridJson,
@@ -44,7 +44,7 @@ export class RendererContractImpl implements RendererContract {
         return new Promise((resolve) => {
             const tempElement = document.createElement("div");
             const component = RenderWidgetService.createComponent(args.model, { DetailItem: null, LazyComponentMap: null });
-            
+
             createRoot(tempElement).render(component);
             // ReactDOM.render(component, tempElement);
             setTimeout(() => {

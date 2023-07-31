@@ -5,18 +5,17 @@ module.exports = function (app) {
         [/\/sitefinity(?!\/template)/i, "*.axd", "/adminapp", "/sf/system", "/api/default", "/ws", "/restapi", "/contextual-help", "/res", "/admin-bridge", "/sfres", "/images", "/documents", "/videos"],
         createProxyMiddleware({
             secure: false,
-            target: 'https://localhost',
+            target: process.env.PROXY_URL,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyReq: (proxyReq, req, res) => {
-                if (process.env.PORT) {
-                    proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:${process.env.PORT}`);
+                if (process.env.PORT && process.env.PROXY_ORIGINAL_HOST) {
+                    proxyReq.setHeader('X-ORIGINAL-HOST', `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`);
                 } else {
                     proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:3000`);
                 }
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
-                // req.url.indexOf("templates/Default.GetPageTemplates") != -1) { // this should be the real live scenario
                 if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {
                     const response = responseBuffer.toString('utf8');
                     let responseAsJson = JSON.parse(response);
@@ -29,7 +28,7 @@ module.exports = function (app) {
                             Framework: 1,
                             Id: "00000000-0000-0000-0000-000000000000",
                             Name: "React.Default",
-                            ThumbnailUrl : "/assets/thumbnail-default.png",
+                            ThumbnailUrl: "/assets/thumbnail-default.png",
                             Title: "Default",
                             UsedByNumberOfPages: 0
                         }]

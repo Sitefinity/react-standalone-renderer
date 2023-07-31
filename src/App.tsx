@@ -7,9 +7,10 @@ import { RenderContext } from './services/render-context';
 import { RenderWidgetService } from './services/render-widget-service';
 import { RequestContext } from './services/request-context';
 import { LayoutService } from './sdk/services/layout.service';
-import { ServiceMetadata } from './sdk/service-metadata';
+import { ServiceMetadata, ServiceMetadataDefinition } from './sdk/service-metadata';
 import { PageLayoutServiceResponse } from './sdk/services/layout-service.response';
 import { CONFIG } from './config';
+import { RootUrlService } from './sdk/root-url.service';
 
 export interface AppState {
     culture: string;
@@ -19,49 +20,61 @@ export interface AppState {
     requestContext: RequestContext
 }
 
-export function App() {
-    const [pageData, setPageData] = useState<AppState>();
-    const location = useLocation();
+type Props = {
+    metadata: ServiceMetadataDefinition | undefined
+    layout: PageLayoutServiceResponse | undefined
+}
 
+export function App({ metadata, layout }: Props) {
+    const [pageData, setPageData] = useState<AppState>();
     useEffect(() => {
         const getLayout = async () => {
             
-            await ServiceMetadata.fetch();
-            const response = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
-            if (!response.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
+            if (!metadata) {
+                await ServiceMetadata.fetch();
+            } else {
+                ServiceMetadata.serviceMetadataCache = metadata;
+            }
+            
+            if (!layout) {
+                layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
+            }
+            
+            if (!layout.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
                 setPageData({
-                    culture: response.Culture,
-                    siteId: response.SiteId,
-                    content: response.ComponentContext.Components,
-                    id: response.Id,
+                    culture: layout.Culture,
+                    siteId: layout.SiteId,
+                    content: layout.ComponentContext.Components,
+                    id: layout.Id,
                     requestContext: {
-                        DetailItem: response.DetailItem,
+                        DetailItem: layout.DetailItem,
                         LazyComponentMap: null,
                     }
                 });
             }
-
-            window.document.body.classList.add("container-fluid");
+            
+            getRootElement().classList.add("container-fluid");
             if (RenderContext.isEdit()) {
                 const timeout = 2000;
                 const start = new Date().getTime();
                 const handle = window.setInterval(() => {
-                    if (!response)
+                    if (!layout)
                         return;
                     
-                    window.document.body.setAttribute('data-sfcontainer', 'Body');
+                    document.body.setAttribute('data-sfcontainer', '')
+                    getRootElement().setAttribute('data-sfcontainer', 'Body');
                     // we do not know the exact time when react has finished the rendering process.
                     // thus we check every 100ms for dom changes. A proper check would be to see if every single
                     // component is rendered
                     const timePassed = new Date().getTime() - start;
-                    if ((response.ComponentContext.Components.length > 0 && window.document.body.childElementCount > 0) || response.ComponentContext.Components.length === 0 || timePassed > timeout) {
+                    if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
                         
                         (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
                 }, 1000);
-            } else if (response.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
+            } else if (layout.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
                 const lazy = await LayoutService.getLazyComponents(window.location.href);
                 const lazyComponentsMap: {[key: string]: ModelBase<any>} = {};
                 lazy.Components.forEach((component) => {
@@ -69,19 +82,19 @@ export function App() {
                 });
 
                 setPageData({
-                    culture: response.Culture,
-                    siteId: response.SiteId,
-                    content: response.ComponentContext.Components,
-                    id: response.Id,
+                    culture: layout.Culture,
+                    siteId: layout.SiteId,
+                    content: layout.ComponentContext.Components,
+                    id: layout.Id,
                     requestContext: {
-                        DetailItem: response.DetailItem,
+                        DetailItem: layout.DetailItem,
                         LazyComponentMap: lazyComponentsMap,
                     }
                 });
             }
 
-            renderSeoMeta(response);
-            renderScripts(response);
+            renderSeoMeta(layout);
+            renderScripts(layout);
         }
 
         getLayout();
@@ -103,6 +116,10 @@ function renderScripts(response: PageLayoutServiceResponse) {
     response.Scripts.forEach((script) => {
         const scriptElement = document.createElement('script');
         if (script.Source) {
+            if (script.Source[0] === '/') {
+                script.Source = RootUrlService.getUrl() + script.Source.substring(1);
+            }
+
             scriptElement.setAttribute('src', script.Source);
         }
 
@@ -114,7 +131,7 @@ function renderScripts(response: PageLayoutServiceResponse) {
             scriptElement.innerText = script.Value;
         }
 
-        document.body.appendChild(scriptElement);
+        getRootElement().appendChild(scriptElement);
     });
 }
 
@@ -154,4 +171,8 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
             document.head.appendChild(linkElement);
         }
     }
+}
+
+export function getRootElement(): HTMLElement {
+    return (document.getElementById("root") || document.getElementById("__next")) as HTMLElement;
 }

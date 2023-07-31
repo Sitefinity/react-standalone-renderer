@@ -1,5 +1,5 @@
 import React from "react";
-import { ChartComponent } from "../components/chart/chart-component";
+// import { ChartComponent } from "../components/chart/chart-component";
 import { ContentBlock } from "../components/content-block/content-block";
 import { ContentList } from "../components/content-list/content-list";
 import { ModelBase } from "../components/interfaces";
@@ -8,12 +8,18 @@ import { EditorMetadata } from "../editor/editor-metadata";
 import { WidgetModel } from "../editor/interfaces";
 import { RenderContext } from "./render-context";
 import { RequestContext } from "./request-context";
+import { GridComponent } from "../components/grid/grid-component";
+import { ButtonComponent } from "../components/kendo-button/kendo-button";
+import { TextBoxComponent } from "../components/kendo-textbox/kendo-textbox";
 
 export const TYPES_MAP = {
     "SitefinityContentBlock": ContentBlock,
     "SitefinitySection": Section,
     "SitefinityContentList": ContentList,
-    "SitefinityChart": ChartComponent
+    // "SitefinityChart": ChartComponent,
+    "SitefinityKendoButton": ButtonComponent,
+    "SitefinityKendoTextBox": TextBoxComponent,
+    "SitefinityKendoGrid": GridComponent,
 };
 
 export class RenderWidgetService {
@@ -24,7 +30,7 @@ export class RenderWidgetService {
         }
 
         parseProperties(widgetModel, requestContext);
-        const element = React.createElement(mappedType, widgetModel);
+        const element = React.createElement(mappedType, { key: widgetModel.Id, ...widgetModel }, );
         return element;
     }
 }

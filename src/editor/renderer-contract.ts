@@ -5,17 +5,24 @@ import sitefinityContentBlockJson from '../components/content-block/designer-met
 import sitefinitySectionJson from '../components/section/designer-metadata.json';
 import sitefinityContentListJson from '../components/content-list/designer-metadata.json';
 import sitefinityChartJson from '../components/chart/designer-metadata.json';
+import sitefinityGridJson from '../components/grid/designer-metadata.json';
+import sitefinityTextBoxJson from '../components/kendo-textbox/designer-metadata.json';
+import sitefinityButtonJson from '../components/kendo-button/designer-metadata.json';
 
 import contentWidgetsJson from './designer-metadata/content-widgets.json';
 import layoutWidgetsJson from './designer-metadata/layout-widgets.json';
 import { RenderWidgetService } from "../services/render-widget-service";
+import { createRoot } from "react-dom/client";
 
 export class RendererContractImpl implements RendererContract {
     private metadataMap: { [key: string]: any } = {
         "SitefinityContentBlock": sitefinityContentBlockJson,
         "SitefinitySection": sitefinitySectionJson,
         "SitefinityContentList": sitefinityContentListJson,
-        "SitefinityChart": sitefinityChartJson
+        // "SitefinityChart": sitefinityChartJson,
+        "SitefinityKendoButton": sitefinityButtonJson,
+        "SitefinityKendoTextBox":sitefinityTextBoxJson,
+        "SitefinityKendoGrid": sitefinityGridJson,
     }
 
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata> {
@@ -37,8 +44,9 @@ export class RendererContractImpl implements RendererContract {
         return new Promise((resolve) => {
             const tempElement = document.createElement("div");
             const component = RenderWidgetService.createComponent(args.model, { DetailItem: null, LazyComponentMap: null });
-            
-            ReactDOM.render(component, tempElement);
+
+            createRoot(tempElement).render(component);
+            // ReactDOM.render(component, tempElement);
             setTimeout(() => {
                 resolve({
                     element: tempElement.firstElementChild as HTMLElement,

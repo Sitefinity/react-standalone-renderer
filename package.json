@@ -4,10 +4,21 @@
   "private": true,
   "homepage": "",
   "dependencies": {
-    "@progress/kendo-drawing": "^1.17.1",
+    "@progress/kendo-data-query": "^1.6.0",
+    "@progress/kendo-drawing": "^1.17.5",
     "@progress/kendo-licensing": "^1.2.2",
-    "@progress/kendo-react-charts": "^5.6.0",
-    "@progress/kendo-react-intl": "^5.6.0",
+    "@progress/kendo-react-animation": "^5.14.1",
+    "@progress/kendo-react-buttons": "^5.14.1",
+    "@progress/kendo-react-charts": "^5.14.1",
+    "@progress/kendo-react-data-tools": "^5.14.1",
+    "@progress/kendo-react-dateinputs": "^5.14.1",
+    "@progress/kendo-react-dropdowns": "^5.14.1",
+    "@progress/kendo-react-grid": "^5.14.1",
+    "@progress/kendo-react-inputs": "^5.14.1",
+    "@progress/kendo-react-intl": "^5.14.1",
+    "@progress/kendo-react-popup": "^5.14.1",
+    "@progress/kendo-react-treeview": "^5.14.1",
+    "@progress/kendo-svg-icons": "^1.5.0",
     "@progress/kendo-theme-default": "^5.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -21,6 +32,8 @@
     "bootstrap": "5.1.3",
     "hammerjs": "^2.0.8",
     "http-proxy-middleware": "^2.0.6",
+    "next": "^13.4.6",
+    "package": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
@@ -29,14 +42,11 @@
     "typescript": "~4.7.4"
   },
   "scripts": {
-    "start": "npm-run-all -p start:js",
-    "start:js": "react-scripts start",
-    "build": "npm-run-all build:*",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "starst:js": "react-scripts-ts start",
-    "build:js": "react-scripts build",
-    "builds:js": "react-scripts-ts build"
+    "next:start": "next dev",
+    "next:start:https": "node server.js",
+    "next:build": "next build && next export -o ./next/export",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

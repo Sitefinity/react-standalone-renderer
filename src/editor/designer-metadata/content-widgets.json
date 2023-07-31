@@ -12,10 +12,24 @@
                     "initialProperties": []
                 },
                 {
-                    "name": "SitefinityChart",
+                    "name": "SitefinityKendoButton",
                     "addWidgetName": null,
                     "addWidgetTitle": null,
-                    "title": "Chart",
+                    "title": "Button",
+                    "initialProperties": []
+                },
+                {
+                    "name": "SitefinityKendoTextBox",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "TextBox",
+                    "initialProperties": []
+                },
+                {
+                    "name": "SitefinityKendoGrid",
+                    "addWidgetName": null,
+                    "addWidgetTitle": null,
+                    "title": "Grid",
                     "initialProperties": []
                 }
             ]

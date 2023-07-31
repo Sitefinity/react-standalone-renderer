@@ -33,6 +33,8 @@ export class LayoutService {
             url += `${concatChar}sfaction=edit`;
         }
 
+        url = RootUrlService.getUrl() + url.substring(1);
+
         return fetch(url).then(x => x.json());
     }
 

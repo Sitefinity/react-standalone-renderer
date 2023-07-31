@@ -1,15 +1,15 @@
 /*sc- is a selector prefix meaning 'sitefinity core'. It can be changed by your preference*/
 :root {
-  --sf-backgrоund-image: transparent;
-  --sf-backgrоund-image: none;
+  --sf-background-image: transparent;
+  --sf-background-image: none;
   --sf-background-size: auto;
   --sf-background-position: 0% 0%;
 }
 
 .row,
 [class^="col-"] {
-  --sf-backgrоund-color: transparent;
-  background-color: var(--sf-backgrоund-color);
+  --sf-background-color: transparent;
+  background-color: var(--sf-background-color);
 }
 
 .sc-video__wrapper {
@@ -38,8 +38,8 @@
 }
 
 .row.-sc-image {
-  background-color: var(--sf-backgrоund-color);
-  background-image: var(--sf-backgrоund-image);
+  background-color: var(--sf-background-color);
+  background-image: var(--sf-background-image);
   background-size: var(--sf-background-size);
   background-position: var(--sf-background-position);
   background-repeat: no-repeat;

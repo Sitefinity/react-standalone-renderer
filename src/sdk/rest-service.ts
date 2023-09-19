@@ -1,4 +1,3 @@
-import { CONFIG } from "../config";
 import { CollectionResponse } from "./dto/collection-response";
 import { GenericContentItem } from "./dto/generic-content-item";
 import { SdkItem } from "./dto/sdk-item";

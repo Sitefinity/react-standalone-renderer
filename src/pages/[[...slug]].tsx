@@ -17,6 +17,10 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
+    if (process.env.NODE_ENV === 'development') {
+        return { props: {} }
+    }
+
     const path = '/' + params.slug.join('/');
     const metadata = await ServiceMetadata.fetch();
     const layout = await LayoutService.get(path, RenderContext.isEdit());
@@ -29,7 +33,14 @@ export async function getStaticProps({ params }: Params) {
     }
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths() {5
+    if (process.env.NODE_ENV === 'development') {
+        return {
+            paths: [],
+            fallback: 'blocking',
+        }
+    }
+
     const getAllArgs: GetAllArgs = {
         Skip: 0,
         Take: 50,

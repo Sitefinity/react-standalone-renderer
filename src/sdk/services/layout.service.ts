@@ -1,4 +1,3 @@
-import { CONFIG } from "../../config";
 import { RootUrlService } from "../root-url.service";
 import { PageLayoutServiceResponse } from "./layout-service.response";
 import { LazyComponentsResponse } from "./lazy-components.response";
@@ -7,7 +6,7 @@ export class LayoutService {
 
     public static get(pagePathAndQuery: string, edit: boolean): Promise<PageLayoutServiceResponse> {
         let url = null;
-        
+
         let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");
         if (indexOfSitefinityTemplate > 0) {
             let id = null;

@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, Fragment } from 'react';
-import { ModelBase, PageContentServiceResponse } from './components/interfaces';
-import { useLocation } from 'react-router-dom';
+import { ModelBase } from './components/interfaces';
 import { RendererContractImpl } from './editor/renderer-contract';
 import { RenderContext } from './services/render-context';
 import { RenderWidgetService } from './services/render-widget-service';
@@ -9,7 +8,6 @@ import { RequestContext } from './services/request-context';
 import { LayoutService } from './sdk/services/layout.service';
 import { ServiceMetadata, ServiceMetadataDefinition } from './sdk/service-metadata';
 import { PageLayoutServiceResponse } from './sdk/services/layout-service.response';
-import { CONFIG } from './config';
 import { RootUrlService } from './sdk/root-url.service';
 
 export interface AppState {
@@ -29,17 +27,17 @@ export function App({ metadata, layout }: Props) {
     const [pageData, setPageData] = useState<AppState>();
     useEffect(() => {
         const getLayout = async () => {
-            
+
             if (!metadata) {
                 await ServiceMetadata.fetch();
             } else {
                 ServiceMetadata.serviceMetadataCache = metadata;
             }
-            
+
             if (!layout) {
                 layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
             }
-            
+
             if (!layout.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
                 setPageData({
                     culture: layout.Culture,
@@ -52,7 +50,7 @@ export function App({ metadata, layout }: Props) {
                     }
                 });
             }
-            
+
             getRootElement().classList.add("container-fluid");
             if (RenderContext.isEdit()) {
                 const timeout = 2000;
@@ -60,7 +58,7 @@ export function App({ metadata, layout }: Props) {
                 const handle = window.setInterval(() => {
                     if (!layout)
                         return;
-                    
+
                     document.body.setAttribute('data-sfcontainer', '')
                     getRootElement().setAttribute('data-sfcontainer', 'Body');
                     // we do not know the exact time when react has finished the rendering process.
@@ -69,7 +67,7 @@ export function App({ metadata, layout }: Props) {
                     const timePassed = new Date().getTime() - start;
                     if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
-                        
+
                         (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
@@ -147,7 +145,7 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
             "og:description": response.MetaInfo.OpenGraphDescription,
             "og:site": response.MetaInfo.OpenGraphSite,
         }
-    
+
         Object.keys(metaMap).forEach((key) => {
             const metaElement = document.createElement("meta");
             metaElement.setAttribute('property', key);
@@ -157,13 +155,13 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
                 document.head.appendChild(metaElement);
             }
         });
-    
+
         if (response.MetaInfo.Description) {
             const metaElement = document.createElement("meta");
             metaElement.setAttribute('description', response.MetaInfo.Description);
             document.head.appendChild(metaElement);
         }
-    
+
         if (response.MetaInfo.CanonicalUrl) {
             const linkElement = document.createElement("link");
             linkElement.setAttribute("rel", "canonical");

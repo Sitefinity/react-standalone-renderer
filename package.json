@@ -44,9 +44,7 @@
   "scripts": {
     "next:start": "next dev",
     "next:start:https": "node server.js",
-    "next:build": "next build && next export -o ./next/export",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "next:build": "next build && next export -o ./next/export"
   },
   "eslintConfig": {
     "extends": "react-app"

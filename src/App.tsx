@@ -8,9 +8,9 @@ import { RequestContext } from './services/request-context';
 import { LayoutService } from './sdk/services/layout.service';
 import { ServiceMetadata, ServiceMetadataDefinition } from './sdk/service-metadata';
 import { PageLayoutServiceResponse } from './sdk/services/layout-service.response';
-import { RootUrlService } from './sdk/root-url.service';
+import { renderSeoMeta, renderScripts, getLazyComponents } from './bootstrap/layout-functions'
 
-export interface AppState {
+interface AppState {
     culture: string;
     siteId: string;
     content: ModelBase<any>[];
@@ -18,86 +18,51 @@ export interface AppState {
     requestContext: RequestContext
 }
 
-type Props = {
+interface Props {
     metadata: ServiceMetadataDefinition | undefined
     layout: PageLayoutServiceResponse | undefined
 }
 
-export function App({ metadata, layout }: Props) {
+export function App({ metadata, layout: prefetchedLayout }: Props) {
     const [pageData, setPageData] = useState<AppState>();
     useEffect(() => {
         const getLayout = async () => {
-
             if (!metadata) {
                 await ServiceMetadata.fetch();
-            } else {
-                ServiceMetadata.serviceMetadataCache = metadata;
             }
 
+            let layout = prefetchedLayout;
             if (!layout) {
                 layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
             }
 
-            if (!layout.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
-                setPageData({
-                    culture: layout.Culture,
-                    siteId: layout.SiteId,
-                    content: layout.ComponentContext.Components,
-                    id: layout.Id,
-                    requestContext: {
-                        DetailItem: layout.DetailItem,
-                        LazyComponentMap: null,
-                    }
-                });
-            }
-
             getRootElement().classList.add("container-fluid");
+
+            let appState : AppState = {
+                culture: layout.Culture,
+                siteId: layout.SiteId,
+                content: layout.ComponentContext.Components,
+                id: layout.Id,
+                requestContext: {
+                    DetailItem: layout.DetailItem,
+                    LazyComponentMap: null,
+                }
+            };
+
             if (RenderContext.isEdit()) {
-                const timeout = 2000;
-                const start = new Date().getTime();
-                const handle = window.setInterval(() => {
-                    if (!layout)
-                        return;
-
-                    document.body.setAttribute('data-sfcontainer', '')
-                    getRootElement().setAttribute('data-sfcontainer', 'Body');
-                    // we do not know the exact time when react has finished the rendering process.
-                    // thus we check every 100ms for dom changes. A proper check would be to see if every single
-                    // component is rendered
-                    const timePassed = new Date().getTime() - start;
-                    if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
-                        window.clearInterval(handle);
-
-                        (window as any)["rendererContract"] = new RendererContractImpl();
-                        window.dispatchEvent(new Event('contractReady'));
-                    }
-                }, 1000);
-            } else if (layout.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
-                const lazy = await LayoutService.getLazyComponents(window.location.href);
-                const lazyComponentsMap: {[key: string]: ModelBase<any>} = {};
-                lazy.Components.forEach((component) => {
-                    lazyComponentsMap[component.Id] = component;
-                });
-
-                setPageData({
-                    culture: layout.Culture,
-                    siteId: layout.SiteId,
-                    content: layout.ComponentContext.Components,
-                    id: layout.Id,
-                    requestContext: {
-                        DetailItem: layout.DetailItem,
-                        LazyComponentMap: lazyComponentsMap,
-                    }
-                });
+                waitForRender(layout);
+            } else if (layout.ComponentContext.HasLazyComponents) {
+                appState.requestContext.LazyComponentMap = await getLazyComponents();
             }
 
+            setPageData(appState);
             renderSeoMeta(layout);
-            renderScripts(layout);
+            renderScripts(layout, getRootElement());
         }
 
         getLayout();
 
-    }, []);
+    }, [metadata, prefetchedLayout]);
 
     return (
         <Fragment>
@@ -110,67 +75,27 @@ export function App({ metadata, layout }: Props) {
 
 export default App;
 
-function renderScripts(response: PageLayoutServiceResponse) {
-    response.Scripts.forEach((script) => {
-        const scriptElement = document.createElement('script');
-        if (script.Source) {
-            if (script.Source[0] === '/') {
-                script.Source = RootUrlService.getUrl() + script.Source.substring(1);
-            }
-
-            scriptElement.setAttribute('src', script.Source);
-        }
-
-        script.Attributes.forEach((attribute) => {
-            scriptElement.setAttribute(attribute.Key, attribute.Value);
-        });
-
-        if (script.Value) {
-            scriptElement.innerText = script.Value;
-        }
-
-        getRootElement().appendChild(scriptElement);
-    });
-}
-
-function renderSeoMeta(response: PageLayoutServiceResponse) {
-    if (response.MetaInfo) {
-        document.title = response.MetaInfo.Title;
-
-        const metaMap = {
-            "og:title": response.MetaInfo.OpenGraphTitle,
-            "og:image": response.MetaInfo.OpenGraphImage,
-            "og:video": response.MetaInfo.OpenGraphVideo,
-            "og:type": response.MetaInfo.OpenGraphType,
-            "og:description": response.MetaInfo.OpenGraphDescription,
-            "og:site": response.MetaInfo.OpenGraphSite,
-        }
-
-        Object.keys(metaMap).forEach((key) => {
-            const metaElement = document.createElement("meta");
-            metaElement.setAttribute('property', key);
-            const value = (metaMap as any)[key];
-            if (value) {
-                metaElement.setAttribute('content', (metaMap as any)[key]);
-                document.head.appendChild(metaElement);
-            }
-        });
-
-        if (response.MetaInfo.Description) {
-            const metaElement = document.createElement("meta");
-            metaElement.setAttribute('description', response.MetaInfo.Description);
-            document.head.appendChild(metaElement);
-        }
-
-        if (response.MetaInfo.CanonicalUrl) {
-            const linkElement = document.createElement("link");
-            linkElement.setAttribute("rel", "canonical");
-            linkElement.setAttribute("href", response.MetaInfo.CanonicalUrl);
-            document.head.appendChild(linkElement);
-        }
-    }
-}
-
-export function getRootElement(): HTMLElement {
+function getRootElement(): HTMLElement {
     return (document.getElementById("root") || document.getElementById("__next")) as HTMLElement;
 }
+
+function waitForRender(layout: PageLayoutServiceResponse) {
+    const timeout = 2000;
+    const start = new Date().getTime();
+    const handle = window.setInterval(() => {
+
+        document.body.setAttribute('data-sfcontainer', '')
+        getRootElement().setAttribute('data-sfcontainer', 'Body');
+        // we do not know the exact time when react has finished the rendering process.
+        // thus we check every 100ms for dom changes. A proper check would be to see if every single
+        // component is rendered
+        const timePassed = new Date().getTime() - start;
+        if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
+            window.clearInterval(handle);
+
+            (window as any)["rendererContract"] = new RendererContractImpl();
+            window.dispatchEvent(new Event('contractReady'));
+        }
+    }, 1000);
+}
+

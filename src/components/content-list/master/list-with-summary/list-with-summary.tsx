@@ -16,7 +16,7 @@ export function ListWithSummary(props: { model: ListWithSummaryModel }) {
         <Fragment>
             {model.Items.map((item, index) => {
                 return (
-                    <Fragment>
+                    <Fragment key={item.Original.Id}>
                         {index !== 0 && <hr />}
                         <div>
                             {item.Title &&

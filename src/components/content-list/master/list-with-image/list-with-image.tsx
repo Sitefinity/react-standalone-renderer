@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import { SdkItem } from "../../../../sdk/dto/sdk-item";
 import { ListWithImageModel } from "./list-with-image-model";
+import Image from "next/image";
 
 export function ListWithImage(props: { model: ListWithImageModel }) {
     const model = props.model;
@@ -16,11 +17,11 @@ export function ListWithImage(props: { model: ListWithImageModel }) {
         <Fragment>
             {model.Items.map((item, index) => {
                 return (
-                    <Fragment>
+                    <Fragment key={item.Original.Id}>
                         {index !== 0 && <hr />}
                         <div className="d-flex">
                             <div className="flex-shrink-0">
-                                <img className={item.Image.Css} src={item.Image.Url} alt={item.Image.AlternativeText} title={item.Image.Title} />
+                                <Image className={item.Image.Css} src={item.Image.Url} alt={item.Image.AlternativeText} title={item.Image.Title} />
                             </div>
                             <div className="flex-grow-1 ms-3">
                                 {item.Title && <h5 className={item.Title.Css}>{item.Title.Value}</h5>}

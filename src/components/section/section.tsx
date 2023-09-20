@@ -15,7 +15,7 @@ const ColumnNamePrefix = "Column";
 const sectionKey = "Section";
 
 export function Section(props: ModelBase<SectionEntity>) {
-    
+
     const [data, setData] = useState<State>({ Columns: [], Section: { Attributes: {} } });
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export function Section(props: ModelBase<SectionEntity>) {
                 Section: section
             })
         });
-    }, [props.Properties]);
+    }, [props, props.Properties]);
 
     return (
         <section {...data.Section.Attributes } style={data.Section.Style}>
@@ -194,7 +194,7 @@ function populateSection(properties: SectionEntity): Promise<SectionHolder> {
                     style["--sf-background-size"] = "cover";
                     break;
             }
-            
+
             const imageUrl = `${RootUrlService.getUrl()}${image.Url.substring(1)}`;
             style['--sf-background-image'] = `url(${imageUrl})`;
             sectionObject.Style = style;

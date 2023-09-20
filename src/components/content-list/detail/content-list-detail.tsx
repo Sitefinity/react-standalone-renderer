@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
 import { SdkItem } from "../../../sdk/dto/sdk-item";
 import { RestService } from "../../../sdk/rest-service";
 import { ContentListModelDetail } from "./content-list-detail-model";
@@ -37,14 +36,14 @@ export function ContentListDetail(props: { detailModel: ContentListModelDetail }
 
             setData(detailViewModel);
         });
-    }), [props.detailModel]);
+    }), [props.detailModel, item$, model.Attributes, model.ViewName]);
 
     return (
         <div {...data?.Attributes as any}>
             {data?.ViewName === 'News' &&
             <h3>
                 <span>{data?.DetailItem.Title}</span>
-            </h3>    
+            </h3>
             }
         </div>
 

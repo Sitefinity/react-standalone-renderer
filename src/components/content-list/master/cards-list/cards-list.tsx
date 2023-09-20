@@ -1,6 +1,7 @@
 import { CardsListModel } from "./cards-list-model";
 import React from "react"
 import { SdkItem } from "../../../../sdk/dto/sdk-item";
+import Image from "next/image";
 
 export function CardsList(props: { model: CardsListModel }) {
     const model = props.model;
@@ -15,9 +16,9 @@ export function CardsList(props: { model: CardsListModel }) {
     return (
         <div {...model.Attributes as any}>
             {model.Items.map((item) => {
-                return (<div className="x">
+                return (<div key={item.Original.Id} className="x">
                     <div className="card h-100">
-                        <img className={item.Image.Css} src={item.Image.Url} alt={item.Image.AlternativeText} title={item.Image.Title} />
+                        <Image className={item.Image.Css} src={item.Image.Url} alt={item.Image.AlternativeText} title={item.Image.Title} />
                         <div className="card-body">
                             <h5 className={item.Title.Css}>
                                 {model.OpenDetails ?

@@ -55,9 +55,7 @@ app.prepare().then(() => {
             }
 
             return responseBuffer;
-        }),
-        onError: (err, req, res) => {
-        }
+        })
     };
 
     const proxy = createProxyMiddleware(devProxy);

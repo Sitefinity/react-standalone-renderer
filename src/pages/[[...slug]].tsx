@@ -33,7 +33,7 @@ export async function getStaticProps({ params }: Params) {
     }
 }
 
-export async function getStaticPaths() {5
+export async function getStaticPaths() {
     if (process.env.NODE_ENV === 'development') {
         return {
             paths: [],
@@ -59,7 +59,7 @@ export async function getStaticPaths() {5
             break;
         }
 
-        let filtered = response.filter(x => x["Renderer"] == 'React').map(x => x["ViewUrl"]);
+        let filtered = response.filter(x => x["Renderer"] === 'React').map(x => x["ViewUrl"]);
         if (filtered.length > 0) {
             filteredItems.push(...filtered);
         }

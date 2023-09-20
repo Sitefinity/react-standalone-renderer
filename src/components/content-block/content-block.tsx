@@ -10,7 +10,7 @@ export function ContentBlock(props: ModelBase<ContentBlockEntity>) {
         const dataAttributes = htmlAttributes(props, null, null);
         if (props.Properties.WrapperCssClass)
             dataAttributes["class"] = props.Properties.WrapperCssClass;
-        
+
         if (props.Properties && props.Properties.SharedContentID) {
             const fetchDdata = async () => {
                 const res = await RestService.getSharedContent(props.Properties.SharedContentID, props.Culture)
@@ -22,12 +22,12 @@ export function ContentBlock(props: ModelBase<ContentBlockEntity>) {
         } else {
             setData({ content: props.Properties.Content || "", attributes: dataAttributes });
         }
-    }, [props.Properties]);
+    }, [props]);
 
     function createMarkup(content: string) {
         return {
             __html: content
-        }   
+        }
     }
 
     return (

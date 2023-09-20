@@ -11,16 +11,17 @@ import { CardsListModel } from "./cards-list/cards-list-model";
 
 export function ContentListMaster(props: { model: ContentListModelMaster }) {
     const [data, setData] = useState<{ viewName: string, model: ContentListModelbase }>();
-    
+
     const model = props.model;
-    let attributes: { [key: string]: string } = {};
-    if (model.Attributes) {
-        model.Attributes.forEach((pair) => {
-            attributes[pair.Key] = pair.Value;
-        });
-    }
 
     useEffect(() => {
+        let attributes: { [key: string]: string } = {};
+        if (model.Attributes) {
+            model.Attributes.forEach((pair) => {
+                attributes[pair.Key] = pair.Value;
+            });
+        }
+
         model.Items.then((dataItems) => {
             if (model.ViewName === 'CardsList' || model.ViewName === 'ListWithImage') {
                 const viewModel = {
@@ -95,7 +96,7 @@ export function ContentListMaster(props: { model: ContentListModelMaster }) {
                 setData({ viewName: model.ViewName, model: viewModel });
             }
         });
-    }, [props.model]);
+    }, [model]);
 
     return (
         <Fragment>

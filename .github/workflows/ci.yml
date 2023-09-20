@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Callling `npm i` because:
+      # `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync
+      # Please fix the above and replace it with `npm ci`
+      - name: Install modules
+        run: npm i
+
+      # TODO: Please add lint scripts and run them on CI
+      - name: Build
+        run: npm run build

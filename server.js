@@ -20,20 +20,18 @@ app.prepare().then(() => {
         target: process.env.PROXY_URL,
         changeOrigin: true,
         selfHandleResponse: true,
-        /*onProxyReq: (proxyReq, req, res) => {
-            proxyReq.setHeader('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
-            proxyReq.setHeader('X-SF-BYPASS-HOST-VALIDATION-KEY', `SECRET`);
-        },*/
-
         onProxyReq: (proxyReq, req, res) => {
-            if (process.env.PORT && process.env.PROXY_ORIGINAL_HOST) {
+            if (process.env.PROXY_SF_CLOUD_KEY && process.env.PORT) {
+                // for Sitefinity cloud
+                proxyReq.setHeader('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
+                proxyReq.setHeader('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.PROXY_SF_CLOUD_KEY);
+            } else if (process.env.PORT && process.env.PROXY_ORIGINAL_HOST) {
+                // when using a custom port
                 proxyReq.setHeader('X-ORIGINAL-HOST', `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`);
-            } else {
-                proxyReq.setHeader('X-ORIGINAL-HOST', `localhost:3000`);
             }
         },
         onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
-            if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {
+            if ((req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) && res.statusCode === 200) {
                 const response = responseBuffer.toString('utf8');
                 let responseAsJson = JSON.parse(response);
                 responseAsJson.value.splice(0, 0, {

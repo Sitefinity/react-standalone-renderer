@@ -7,7 +7,7 @@ export class RootUrlService {
             return `${process.env["NEXT_CMS_URL"]}/`;
         }
 
-        // when rendering runtime with next.js
+        // when rendering client side with next.js
         if (process.env["NEXT_PUBLIC_CMS_URL"]) {
             return `${process.env["NEXT_PUBLIC_CMS_URL"]}/`;
         }

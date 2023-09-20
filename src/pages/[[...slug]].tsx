@@ -23,7 +23,7 @@ export async function getStaticProps({ params }: Params) {
 
     const path = '/' + params.slug.join('/');
     const metadata = await ServiceMetadata.fetch();
-    const layout = await LayoutService.get(path, RenderContext.isEdit());
+    const layout = await LayoutService.get(path, null);
 
     return {
         props: {

@@ -33,7 +33,9 @@ export function App({ metadata, layout: prefetchedLayout }: Props) {
 
             let layout = prefetchedLayout;
             if (!layout) {
-                layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
+                const urlParams = new URLSearchParams(window.location.search);
+                const actionParam = urlParams.get('sfaction');
+                layout = await LayoutService.get(window.location.pathname, actionParam);
             }
 
             getRootElement().classList.add("container-fluid");

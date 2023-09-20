@@ -4,7 +4,7 @@ import { LazyComponentsResponse } from "./lazy-components.response";
 
 export class LayoutService {
 
-    public static get(pagePathAndQuery: string, edit: boolean): Promise<PageLayoutServiceResponse> {
+    public static get(pagePathAndQuery: string, action: string | null): Promise<PageLayoutServiceResponse> {
         let url = null;
 
         let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");
@@ -23,13 +23,13 @@ export class LayoutService {
             url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePathAndQuery)}'`;
         }
 
-        if (edit) {
+        if (action) {
             let concatChar = '?';
             if (url.indexOf(concatChar) !== -1) {
                 concatChar = '&';
             }
 
-            url += `${concatChar}sfaction=edit`;
+            url += `${concatChar}sfaction={action}`;
         }
 
         url = RootUrlService.getUrl() + url.substring(1);

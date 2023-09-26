@@ -1,0 +1,18 @@
+/* 
+Variables: Misc
+- should be formatted using their CSS property name `--[property-type]-[human-readable-size-variant]` as `--border-radius-xl`.
+- should be designed from `md`-outward, not `sm`-upward or `lg`-downward. In other words, `-md` is the default value expected to be used.
+- should be grouped according to their CSS property type and given appropriate headings.
+- should be extracted out into a category-based-file when variants reach a substantial size (>24). 
+*/
+
+@import url('./colors.css');
+
+:root {
+    /* Border Radius */
+    --border-radius-md: 30px;
+    --border-radius-sm: 10px;
+
+    /* Box Shadow */
+    --box-shadow-md: 0 10 40 0 var(--color-darker-grey);
+}

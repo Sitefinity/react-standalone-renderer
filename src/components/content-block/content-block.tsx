@@ -13,13 +13,13 @@ export function ContentBlock(props: ModelBase<ContentBlockEntity>) {
             dataAttributes["class"] = props.Properties.WrapperCssClass;
 
         if (props.Properties && props.Properties.SharedContentID) {
-            const fetchDdata = async () => {
+            const fetchData = async () => {
                 const res = await RestService.getSharedContent(props.Properties.SharedContentID, props.Culture)
 
                 setData({ content: res.Content, attributes: dataAttributes });
             };
 
-            fetchDdata();
+            fetchData();
         } else {
             setData({ content: props.Properties.Content || "", attributes: dataAttributes });
         }

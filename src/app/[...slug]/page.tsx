@@ -1,7 +1,5 @@
 
 import { ServiceMetadata } from '../../sdk/service-metadata';
-import 'bootstrap/dist/css/bootstrap.css';
-import '@progress/kendo-theme-default/dist/all.css';
 import { RestService } from '../../sdk/rest-service';
 import { GetAllArgs } from '../../sdk/services/get-all-args';
 import { Fragment } from 'react';
@@ -12,7 +10,7 @@ import { RenderWidgetService } from '@/services/render-widget-service';
 import { notFound } from 'next/navigation';
 import { ErrorResponse } from '@/sdk/services/error.response';
 import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
-import { Metadata, ResolvingMetadata } from 'next';
+import PageClient from './page-client';
 
 export async function generateStaticParams() {
     const getAllArgs: GetAllArgs = {
@@ -63,47 +61,46 @@ interface PageParams {
     searchParams: { [key:string]: string }
 }
 
-export async function generateMetadata({ params, searchParams }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
-    await ServiceMetadata.fetch();
+// export async function generateMetadata({ params, searchParams }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+//     await ServiceMetadata.fetch();
 
-    const actionParam = searchParams['sfaction'];
-    const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam);
+//     const actionParam = searchParams['sfaction'];
+//     const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam);
 
-    const errorResponse = layoutOrError as ErrorResponse;
-    if (errorResponse.error && errorResponse.error.code) {
-        if (errorResponse.error.code === "NotFound") {
-            return notFound();
-        }
+//     const errorResponse = layoutOrError as ErrorResponse;
+//     if (errorResponse.error && errorResponse.error.code) {
+//         if (errorResponse.error.code === "NotFound") {
+//             return notFound();
+//         }
 
-        throw errorResponse.error.code;
-    }
-    const layout = layoutOrError as PageLayoutServiceResponse;
+//         throw errorResponse.error.code;
+//     }
+//     const layout = layoutOrError as PageLayoutServiceResponse;
 
-    const metadata: Metadata = {
-        title: layout.MetaInfo.Title,
-        alternates: {
-            canonical: layout.MetaInfo.CanonicalUrl,
-        }
-    }
+//     const metadata: Metadata = {
+//         title: layout.MetaInfo.Title,
+//         alternates: {
+//             canonical: layout.MetaInfo.CanonicalUrl,
+//         }
+//     }
 
-    if (layout.MetaInfo.OpenGraphType) {
-        metadata.openGraph = {
-            title: layout.MetaInfo.OpenGraphTitle,
-            description: layout.MetaInfo.OpenGraphDescription,
-            images: layout.MetaInfo.OpenGraphImage,
-            videos: layout.MetaInfo.OpenGraphVideo,
-            type: layout.MetaInfo.OpenGraphType as any,
-            siteName: layout.MetaInfo.OpenGraphSite
-        };
-    }
+//     if (layout.MetaInfo.OpenGraphType) {
+//         metadata.openGraph = {
+//             title: layout.MetaInfo.OpenGraphTitle,
+//             description: layout.MetaInfo.OpenGraphDescription,
+//             images: layout.MetaInfo.OpenGraphImage,
+//             videos: layout.MetaInfo.OpenGraphVideo,
+//             type: layout.MetaInfo.OpenGraphType as any,
+//             siteName: layout.MetaInfo.OpenGraphSite
+//         };
+//     }
 
-    return metadata;
-}
+//     return metadata;
+// }
 
 export default async function Page({ params, searchParams }: PageParams) {
     await ServiceMetadata.fetch();
 
-    // const urlParams = new URLSearchParams(window.location.search);
     const actionParam = searchParams['sfaction'];
     const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam);
 
@@ -129,10 +126,9 @@ export default async function Page({ params, searchParams }: PageParams) {
         }
     };
 
-    // renderScripts(layout, getRootElement());
-
     return (
         <Fragment>
+            <PageClient layout={layout} />
             {appState.content.map((child) => {
                 return RenderWidgetService.createComponent(child, appState.requestContext);
             })}

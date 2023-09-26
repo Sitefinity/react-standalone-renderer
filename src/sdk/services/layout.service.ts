@@ -2,6 +2,7 @@ import { RootUrlService } from "../root-url.service";
 import { ErrorResponse } from "./error.response";
 import { PageLayoutServiceResponse } from "./layout-service.response";
 import { LazyComponentsResponse } from "./lazy-components.response";
+import { cookies } from 'next/headers'
 
 export class LayoutService {
 
@@ -35,7 +36,10 @@ export class LayoutService {
 
         url = RootUrlService.getUrl() + url.substring(1);
 
-        return fetch(url).then(x => x.json());
+        const cookie = cookies().toString();
+        return fetch(url, { headers: { "Cookie": cookie, "x-original-host": "localhost:5001", "x-requested-with": "" } }).then(x => {
+            return x.json();
+        });
     }
 
     public static getLazyComponents(pagePathAndQuery: string): Promise<LazyComponentsResponse> {

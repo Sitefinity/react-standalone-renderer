@@ -2,11 +2,10 @@ import { RootUrlService } from "../root-url.service";
 import { ErrorResponse } from "./error.response";
 import { PageLayoutServiceResponse } from "./layout-service.response";
 import { LazyComponentsResponse } from "./lazy-components.response";
-import { cookies } from 'next/headers'
 
 export class LayoutService {
 
-    public static get(pagePathAndQuery: string, action: string | null): Promise<PageLayoutServiceResponse | ErrorResponse> {
+    public static get(pagePathAndQuery: string, action: string | null, headers: { [key: string]: string } = {}): Promise<PageLayoutServiceResponse | ErrorResponse> {
         let url = null;
 
         let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");
@@ -36,8 +35,7 @@ export class LayoutService {
 
         url = RootUrlService.getUrl() + url.substring(1);
 
-        const cookie = cookies().toString();
-        return fetch(url, { headers: { "Cookie": cookie, "x-original-host": "localhost:5001", "x-requested-with": "" } }).then(x => {
+        return fetch(url, { headers: headers }).then(x => {
             return x.json();
         });
     }

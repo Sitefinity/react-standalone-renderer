@@ -11,6 +11,7 @@ import { notFound } from 'next/navigation';
 import { ErrorResponse } from '@/sdk/services/error.response';
 import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
 import PageClient from './page-client';
+import { cookies } from 'next/headers';
 
 export async function generateStaticParams() {
     const getAllArgs: GetAllArgs = {
@@ -102,7 +103,14 @@ export default async function Page({ params, searchParams }: PageParams) {
     await ServiceMetadata.fetch();
 
     const actionParam = searchParams['sfaction'];
-    const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam);
+
+    let headers: { [key: string]: string } = {};
+    if (process.env.NODE_ENV === 'development' && actionParam) {
+        const cookie = cookies().toString();
+        headers = { "Cookie": cookie, "x-original-host": `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`, "x-requested-with": "" };
+    }
+
+    const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam, headers);
 
     const errorResponse = layoutOrError as ErrorResponse;
     if (errorResponse.error && errorResponse.error.code) {

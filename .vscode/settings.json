@@ -1,0 +1,11 @@
+{
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "files.autoGuessEncoding": true,
+    "files.exclude": {"**/node_modules/": true},
+    "git.autofetch": true,
+    "git.fetchOnPull": true,
+    "prettier.requireConfig": true,
+    "editor.linkedEditing": true
+}

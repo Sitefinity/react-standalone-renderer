@@ -1,0 +1,28 @@
+/* 
+Variables: Colors
+- should be formatted `--color-[human-readable-colour-name]` as `--color-orange`.
+- should be in the `rgba` function for performance and enhanced colour-space.
+ */
+
+:root {
+    /* Referred to as 'Primary Orange' in the design system. */
+    --color-orange: rgba(237 139 0 100%);
+    --color-white: rgba(255 255 255 100%);
+
+    /* Referred to as 'Lightest Gray' in the design system. */
+    --color-lighter-grey: rgba(245 244 242 100%);
+    --color-light-grey: rgba(235 233 225 100%);
+
+    /* Referred to as 'Mid Gray' in the design system. */
+    --color-grey: rgba(214 210 196 100%);
+
+    /* Referred to as 'Warm Gray' in the design system. */
+    --color-dark-grey: rgba(101 101 98 100%);
+
+    /* Referred to as 'Dark Gray' in the design system. */
+    --color-darker-grey: rgba(73 71 61 100%);
+    --color-black: rgba(0 0 0 100%);
+
+    /* Referred to as 'Error State' in the design system. */
+    --color-red: rgba(211 6 6 100%);
+}

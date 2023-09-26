@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Format all code to the Prettier style, regardless of developer local style.
+# The script being ran here can be found in `package.json`. 
+npx lint-staged
+
+# Lint all styles (CSS).
+npm run lint:css
+
+# Lint all components (JSX).
+npm run lint:jsx
+
+# Test all components with Jest/React Testing Library.
+npm run test
+
+# Uncomment to test Husky hooks.
+# exit 1;

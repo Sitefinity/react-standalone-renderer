@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useCallback, useEffect, useState } from "react";
 import { EditorMetadata } from "../../editor/editor-metadata";
 import { PageItem } from "../../sdk/dto/page-item";

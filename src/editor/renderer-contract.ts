@@ -1,13 +1,8 @@
 import { RendererContract, ComponentMetadata, GetWidgetMetadataArgs, RenderWidgetArgs, GetWidgetsArgs, TotalCountResult, WidgetItem, WidgetSection, RenderResult, GetCategoriesArgs } from "./interfaces";
-import ReactDOM from "react-dom";
 
 import sitefinityContentBlockJson from '../components/content-block/designer-metadata.json'
 import sitefinitySectionJson from '../components/section/designer-metadata.json';
 import sitefinityContentListJson from '../components/content-list/designer-metadata.json';
-import sitefinityChartJson from '../components/chart/designer-metadata.json';
-import sitefinityGridJson from '../components/grid/designer-metadata.json';
-import sitefinityTextBoxJson from '../components/kendo-textbox/designer-metadata.json';
-import sitefinityButtonJson from '../components/kendo-button/designer-metadata.json';
 
 import contentWidgetsJson from './designer-metadata/content-widgets.json';
 import layoutWidgetsJson from './designer-metadata/layout-widgets.json';
@@ -19,10 +14,6 @@ export class RendererContractImpl implements RendererContract {
         "SitefinityContentBlock": sitefinityContentBlockJson,
         "SitefinitySection": sitefinitySectionJson,
         "SitefinityContentList": sitefinityContentListJson,
-        // "SitefinityChart": sitefinityChartJson,
-        "SitefinityKendoButton": sitefinityButtonJson,
-        "SitefinityKendoTextBox":sitefinityTextBoxJson,
-        "SitefinityKendoGrid": sitefinityGridJson,
     }
 
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata> {

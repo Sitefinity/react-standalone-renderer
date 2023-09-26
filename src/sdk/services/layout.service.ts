@@ -1,10 +1,11 @@
 import { RootUrlService } from "../root-url.service";
+import { ErrorResponse } from "./error.response";
 import { PageLayoutServiceResponse } from "./layout-service.response";
 import { LazyComponentsResponse } from "./lazy-components.response";
 
 export class LayoutService {
 
-    public static get(pagePathAndQuery: string, action: string | null): Promise<PageLayoutServiceResponse> {
+    public static get(pagePathAndQuery: string, action: string | null): Promise<PageLayoutServiceResponse | ErrorResponse> {
         let url = null;
 
         let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");

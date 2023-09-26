@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from "react";
 import { ModelBase } from "../interfaces";
 import { htmlAttributes, RenderWidgetService } from "../../services/render-widget-service";

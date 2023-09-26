@@ -32,6 +32,7 @@
     "typescript": "5.2.2"
   },
   "scripts": {
+    "prod": "next start",
     "dev": "node server.js",
     "build": "next build",
     "lint": "next lint"

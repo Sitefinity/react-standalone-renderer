@@ -8,18 +8,11 @@ import { EditorMetadata } from "../editor/editor-metadata";
 import { WidgetModel } from "../editor/interfaces";
 import { RenderContext } from "./render-context";
 import { RequestContext } from "./request-context";
-import { GridComponent } from "../components/grid/grid-component";
-import { ButtonComponent } from "../components/kendo-button/kendo-button";
-import { TextBoxComponent } from "../components/kendo-textbox/kendo-textbox";
 
 export const TYPES_MAP = {
     "SitefinityContentBlock": ContentBlock,
     "SitefinitySection": Section,
-    "SitefinityContentList": ContentList,
-    // "SitefinityChart": ChartComponent,
-    "SitefinityKendoButton": ButtonComponent,
-    "SitefinityKendoTextBox": TextBoxComponent,
-    "SitefinityKendoGrid": GridComponent,
+    "SitefinityContentList": ContentList
 };
 
 export class RenderWidgetService {
@@ -49,7 +42,7 @@ function parseProperties(widgetModel: WidgetModel, requestContext: RequestContex
 export function htmlAttributes(widgetModel: ModelBase<any>, editorMetadata: EditorMetadata | null, error: string | null) {
     if (!RenderContext.isEdit())
         return {};
-    
+
     const attributes: any = {
         "data-sfname": widgetModel.Name,
         "data-sftitle": widgetModel.Name,

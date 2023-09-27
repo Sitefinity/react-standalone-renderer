@@ -60,7 +60,7 @@ export function ContentList(props: ModelBase<ContentListEntity>) {
             const listModel = handleListView(props);
             setData({ detailModel: null, listModel, attributes });
         }
-    }, [props, attributes]);
+    }, [props]);
 
 
     return (

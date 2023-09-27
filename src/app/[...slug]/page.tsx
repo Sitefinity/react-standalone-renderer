@@ -138,7 +138,7 @@ export default async function Page({ params, searchParams }: PageParams) {
 
     return (
         <Fragment>
-            <PageClient layout={layout} isEdit={appState.requestContext.isEdit} />
+            <PageClient layout={layout} isEdit={appState.requestContext.isEdit} metadata={ServiceMetadata.serviceMetadataCache} />
             {appState.content.map((child) => {
                 return RenderWidgetService.createComponent(child, appState.requestContext);
             })}

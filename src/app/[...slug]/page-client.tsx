@@ -2,9 +2,10 @@
 
 import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
 import { RendererContractImpl } from '@/editor/renderer-contract';
+import { ServiceMetadata, ServiceMetadataDefinition } from '@/sdk/service-metadata';
 
-export default function PageClient({ layout, isEdit }: { layout: PageLayoutServiceResponse, isEdit: boolean }) {
-
+export default function PageClient({ layout, isEdit, metadata }: { layout: PageLayoutServiceResponse, isEdit: boolean, metadata: ServiceMetadataDefinition }) {
+    ServiceMetadata.serviceMetadataCache = metadata;
     if (isEdit && typeof window !== 'undefined') {
         const timeout = 2000;
         const start = new Date().getTime();

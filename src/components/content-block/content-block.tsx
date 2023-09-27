@@ -1,38 +1,36 @@
-'use client'
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ModelBase } from "../interfaces";
 import { htmlAttributes } from "../../services/render-widget-service";
-import { RestService } from "../../sdk/rest-service";
 
-export function ContentBlock(props: ModelBase<ContentBlockEntity>) {
-    const [data, setData] = useState<State>({ content: "", attributes: {} });
+export async function ContentBlock(props: ModelBase<ContentBlockEntity>) {
+    // const [data, setData] = useState<State>({ content: "", attributes: {} });
 
-    useEffect(() => {
-        const dataAttributes = htmlAttributes(props, null, null);
-        if (props.Properties.WrapperCssClass)
-            dataAttributes["class"] = props.Properties.WrapperCssClass;
+    // useEffect(() => {
+    //     const dataAttributes = htmlAttributes(props, null, null);
+    //     if (props.Properties.WrapperCssClass)
+    //         dataAttributes["class"] = props.Properties.WrapperCssClass;
 
-        if (props.Properties && props.Properties.SharedContentID) {
-            const fetchData = async () => {
-                const res = await RestService.getSharedContent(props.Properties.SharedContentID, props.Culture)
+    //     if (props.Properties && props.Properties.SharedContentID) {
+    //         const fetchData = async () => {
+    //             const res = await RestService.getSharedContent(props.Properties.SharedContentID, props.Culture)
 
-                setData({ content: res.Content, attributes: dataAttributes });
-            };
+    //             setData({ content: res.Content, attributes: dataAttributes });
+    //         };
 
-            fetchData();
-        } else {
-            setData({ content: props.Properties.Content || "", attributes: dataAttributes });
-        }
-    }, [props]);
+    //         fetchData();
+    //     } else {
+    //         setData({ content: props.Properties.Content || "", attributes: dataAttributes });
+    //     }
+    // }, [props]);
 
-    function createMarkup(content: string) {
-        return {
-            __html: content
-        }
-    }
+    let content = props.Properties.Content;
+
+    const dataAttributes = htmlAttributes(props, null, null, props.requestContext.isEdit);
+    if (props.Properties.WrapperCssClass)
+        dataAttributes["class"] = props.Properties.WrapperCssClass;
 
     return (
-        <div {...data.attributes as any} dangerouslySetInnerHTML={createMarkup(data.content)} />
+        <div {...dataAttributes as any} dangerouslySetInnerHTML={{ __html: content || "" }} />
     );
 }
 

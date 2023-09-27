@@ -30,7 +30,7 @@ export class LayoutService {
                 concatChar = '&';
             }
 
-            url += `${concatChar}sfaction={action}`;
+            url += `${concatChar}sfaction=${action}`;
         }
 
         url = RootUrlService.getUrl() + url.substring(1);

@@ -1,13 +1,11 @@
-
 'use client'
 
 import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
 import { RendererContractImpl } from '@/editor/renderer-contract';
-import { RenderContext } from '@/services/render-context';
 
-export default function PageClient({ layout }: { layout: PageLayoutServiceResponse }) {
+export default function PageClient({ layout, isEdit }: { layout: PageLayoutServiceResponse, isEdit: boolean }) {
 
-    if (RenderContext.isEdit()) {
+    if (isEdit && typeof window !== 'undefined') {
         const timeout = 2000;
         const start = new Date().getTime();
         const handle = window.setInterval(() => {

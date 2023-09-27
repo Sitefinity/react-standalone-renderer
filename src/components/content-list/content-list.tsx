@@ -39,8 +39,8 @@ export function ContentList(props: ModelBase<ContentListEntity>) {
 
     useEffect(() => {
         if (props.Properties.ContentViewDisplayMode === "Automatic") {
-            if (props.requestContext.DetailItem) {
-                const detailModel = handleDetailView(props.requestContext.DetailItem, props);
+            if (props.requestContext.detailItem) {
+                const detailModel = handleDetailView(props.requestContext.detailItem, props);
                 setData({ detailModel, listModel: null, attributes });
             } else {
                 const listModel = handleListView(props);
@@ -118,7 +118,7 @@ function handleListView(props: ModelBase<ContentListEntity>) {
         fieldCssClassMap[entry.FieldName] = entry.CssClass;
     });
 
-    const items = ContentListRestService.getItems(props.Properties, props.requestContext.DetailItem);
+    const items = ContentListRestService.getItems(props.Properties, props.requestContext.detailItem);
 
     let contentListMasterModel: ContentListModelMaster = {
         OnDetailsOpen: ((sdkItem) => {

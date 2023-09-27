@@ -10,7 +10,6 @@ import { StyleGenerator } from "../../styling/style-generator.service";
 import { StylingConfig } from "../../styling/styling-config";
 import { RestSdkTypes, RestService } from "../../sdk/rest-service";
 import { ImageItem } from "../../sdk/dto/image-item";
-import { RenderContext } from "../../services/render-context";
 import { VideoItem } from "../../sdk/dto/video-item";
 import { RootUrlService } from "../../sdk/root-url.service";
 const ColumnNamePrefix = "Column";
@@ -25,7 +24,7 @@ export function Section(props: ModelBase<SectionEntity>) {
         props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
         const columns = populateColumns(props);
         populateSection(props.Properties).then((section) => {
-            const dataAttributes = htmlAttributes(props, null, null);
+            const dataAttributes = htmlAttributes(props, null, null, props.requestContext.isEdit);
             section.Attributes = Object.assign(section.Attributes, dataAttributes);
             setData({
                 Columns: columns,
@@ -78,7 +77,7 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
             Children: children
         };
 
-        if (RenderContext.isEdit()) {
+        if (model.requestContext.isEdit) {
             column.Attributes["data-sfcontainer"] = currentName;
 
             let currentTitle = null;

@@ -6,7 +6,6 @@ import { ModelBase } from "../components/interfaces";
 import { Section } from "../components/section/section";
 import { EditorMetadata } from "../editor/editor-metadata";
 import { WidgetModel } from "../editor/interfaces";
-import { RenderContext } from "./render-context";
 import { RequestContext } from "./request-context";
 
 export const TYPES_MAP = {
@@ -18,8 +17,8 @@ export const TYPES_MAP = {
 export class RenderWidgetService {
     public static createComponent(widgetModel: WidgetModel, requestContext: RequestContext) {
         const mappedType = (TYPES_MAP as any)[widgetModel.Name];
-        if (requestContext.LazyComponentMap && requestContext.LazyComponentMap.hasOwnProperty(widgetModel.Id)) {
-            widgetModel.Properties = requestContext.LazyComponentMap[widgetModel.Id].Properties;
+        if (requestContext.lazyComponentMap && requestContext.lazyComponentMap.hasOwnProperty(widgetModel.Id)) {
+            widgetModel.Properties = requestContext.lazyComponentMap[widgetModel.Id].Properties;
         }
 
         parseProperties(widgetModel, requestContext);
@@ -39,9 +38,10 @@ function parseProperties(widgetModel: WidgetModel, requestContext: RequestContex
     });
 }
 
-export function htmlAttributes(widgetModel: ModelBase<any>, editorMetadata: EditorMetadata | null, error: string | null) {
-    if (!RenderContext.isEdit())
-        return {};
+export function htmlAttributes(widgetModel: ModelBase<any>, editorMetadata: EditorMetadata | null, error: string | null, appendMetadata: boolean) {
+    if(!appendMetadata) {
+        return { };
+    }
 
     const attributes: any = {
         "data-sfname": widgetModel.Name,

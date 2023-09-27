@@ -129,14 +129,16 @@ export default async function Page({ params, searchParams }: PageParams) {
         content: layout.ComponentContext.Components,
         id: layout.Id,
         requestContext: {
-            DetailItem: layout.DetailItem,
-            LazyComponentMap: null,
+            detailItem: layout.DetailItem,
+            lazyComponentMap: null,
+            isEdit: actionParam === 'edit',
+            isPreview: actionParam === 'preview'
         }
     };
 
     return (
         <Fragment>
-            <PageClient layout={layout} />
+            <PageClient layout={layout} isEdit={appState.requestContext.isEdit} />
             {appState.content.map((child) => {
                 return RenderWidgetService.createComponent(child, appState.requestContext);
             })}

@@ -9,7 +9,7 @@ export default function Render() {
 
     const requestContext: RequestContext = {
         detailItem: null,
-        isEdit: false,
+        isEdit: true,
         isPreview: false,
         lazyComponentMap: {
 

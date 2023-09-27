@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ModelBase } from "../interfaces";
 import { htmlAttributes, RenderWidgetService } from "../../services/render-widget-service";
 import { ColumnHolder, ComponentContainer } from "./column-holder";
@@ -15,34 +13,25 @@ import { RootUrlService } from "../../sdk/root-url.service";
 const ColumnNamePrefix = "Column";
 const sectionKey = "Section";
 
-export function Section(props: ModelBase<SectionEntity>) {
+export async function Section(props: ModelBase<SectionEntity>) {
 
-    const [data, setData] = useState<State>({ Columns: [], Section: { Attributes: {} } });
-
-    useEffect(() => {
-        props.Properties.ColumnsCount = props.Properties.ColumnsCount || 1;
-        props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
-        const columns = populateColumns(props);
-        populateSection(props.Properties).then((section) => {
-            const dataAttributes = htmlAttributes(props, null, null, props.requestContext.isEdit);
-            section.Attributes = Object.assign(section.Attributes, dataAttributes);
-            setData({
-                Columns: columns,
-                Section: section
-            })
-        });
-    }, [props, props.Properties]);
+    props.Properties.ColumnsCount = props.Properties.ColumnsCount || 1;
+    props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
+    const columns = populateColumns(props);
+    const section = await populateSection(props.Properties);
+    const dataAttributes = htmlAttributes(props, null, null, props.requestContext.isEdit);
+    section.Attributes = Object.assign(section.Attributes, dataAttributes);
 
     return (
-        <section {...data.Section.Attributes } style={data.Section.Style}>
-            {data.Section.ShowVideo && data.Section.VideoUrl &&
+        <section {...section.Attributes } style={section.Style}>
+            {section.ShowVideo && section.VideoUrl &&
                 <video className="sc-video__element" autoPlay muted loop>
                     <source src="{{viewModel.Section.VideoUrl}}" />
                 </video>
             }
-            {data.Columns.map((x, i) => {
+            {columns.map((x, i) => {
                 return (
-                    <div key={i} {...x.Attributes} style={data.Section.Style}>
+                    <div key={i} {...x.Attributes} style={section.Style}>
                         {x.Children.map(y => {
                             return RenderWidgetService.createComponent(y.model, y.model.requestContext)
                         })}

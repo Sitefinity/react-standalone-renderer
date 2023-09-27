@@ -21,7 +21,7 @@ const editorMetadata: EditorMetadata = {
 };
 
 export function ContentList(props: ModelBase<ContentListEntity>) {
-    const attributes = htmlAttributes(props, editorMetadata, null);
+    const attributes = htmlAttributes(props, editorMetadata, null, props.requestContext.isEdit);
     const [data, setData] = useState<State>({ detailModel: null, listModel: null, attributes });
 
     props.Properties.DetailPageMode = props.Properties.DetailPageMode || "SamePage";

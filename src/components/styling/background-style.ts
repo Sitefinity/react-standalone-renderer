@@ -1,4 +1,4 @@
-import { SdkItem } from "../sdk/dto/sdk-item";
+import { SdkItem } from "../../framework/sdk/dto/sdk-item";
 import { ImagePosition } from "./position";
 
 export interface BackgroundStyle {

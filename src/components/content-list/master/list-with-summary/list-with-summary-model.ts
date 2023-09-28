@@ -1,7 +1,7 @@
-import { SdkItem } from "../../../../sdk/dto/sdk-item";
-import { ContentListModelbase } from "../content-list-model-base";
+import { SdkItem } from "../../../../framework/sdk/dto/sdk-item";
+import { ContentListModelBase } from "../content-list-model-base";
 
-export interface ListWithSummaryModel extends ContentListModelbase {
+export interface ListWithSummaryModel extends ContentListModelBase {
     Items: Array<ItemModel>
 }
 

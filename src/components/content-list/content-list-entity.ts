@@ -1,8 +1,8 @@
-import { ContentListSettings } from "../../editor/designer-entities/content-list-settings";
-import { MixedContentContext } from "../../editor/designer-entities/mixed-content-context";
-import { CombinedFilter } from "../../sdk/filters/combined-filter";
-import { FilterClause } from "../../sdk/filters/filter-clause";
-import { RelationFilter } from "../../sdk/filters/relation-filter";
+import { ContentListSettings } from "../../framework/editor/designer-entities/content-list-settings";
+import { MixedContentContext } from "../../framework/editor/designer-entities/mixed-content-context";
+import { CombinedFilter } from "../../framework/sdk/filters/combined-filter";
+import { FilterClause } from "../../framework/sdk/filters/filter-clause";
+import { RelationFilter } from "../../framework/sdk/filters/relation-filter";
 
 export interface ContentListEntity {
     SelectedItems: MixedContentContext;

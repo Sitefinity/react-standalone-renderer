@@ -1,6 +1,6 @@
+import { SdkItem } from "../../../../framework/sdk/dto/sdk-item";
 import { CardsListModel } from "./cards-list-model";
 import React from "react"
-import { SdkItem } from "../../../../sdk/dto/sdk-item";
 
 export function CardsList(props: { model: CardsListModel }) {
     const model = props.model;

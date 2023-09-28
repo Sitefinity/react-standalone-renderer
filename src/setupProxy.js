@@ -16,7 +16,7 @@ module.exports = function (app) {
                 }
             },
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
-                if (req.url.indexOf("pages/Default.GetPageTemplates") != -1 || req.url.indexOf("templates/Default.GetPageTemplates") != -1) {
+                if (req.url.indexOf("pages/Default.GetPageTemplates") !== -1 || req.url.indexOf("templates/Default.GetPageTemplates") !== -1) {
                     const response = responseBuffer.toString('utf8');
                     let responseAsJson = JSON.parse(response);
                     responseAsJson.value.splice(0, 0, {

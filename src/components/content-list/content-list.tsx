@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { EditorMetadata } from "../../editor/editor-metadata";
-import { PageItem } from "../../sdk/dto/page-item";
-import { SdkItem } from "../../sdk/dto/sdk-item";
-import { RestSdkTypes, RestService } from "../../sdk/rest-service";
-import { DetailItem } from "../../sdk/services/detail-item";
-import { htmlAttributes } from "../../services/render-widget-service";
-import { ModelBase } from "../interfaces";
 import { ContentListEntity } from "./content-list-entity";
 import { ContentListRestService } from "./content-list-rest.service";
 import { ContentListDetail } from "./detail/content-list-detail";
 import { ContentListModelDetail } from "./detail/content-list-detail-model";
 import { ContentListMaster } from "./master/content-list-master";
 import { ContentListModelMaster } from "./master/content-list-master-model";
-const editorMetadata: EditorMetadata = {
-    Title: "Content list",
-    EmptyIconText: "Select content",
-    EmptyIcon: "plus-circle",
-};
+import { PageItem } from "../../framework/sdk/dto/page-item";
+import { SdkItem } from "../../framework/sdk/dto/sdk-item";
+import { RestService, RestSdkTypes } from "../../framework/sdk/rest-service";
+import { DetailItem } from "../../framework/sdk/services/detail-item";
+import { htmlAttributes } from "../../framework/widgets/utils";
+import { WidgetContext } from "../../framework/widgets/widget-metadata";
 
-export function ContentList(props: ModelBase<ContentListEntity>) {
-    const attributes = htmlAttributes(props, editorMetadata, null);
+export function ContentList(props: WidgetContext<ContentListEntity>) {
+    const attributes = htmlAttributes(props);
     const [data, setData] = useState<State>({ detailModel: null, listModel: null, attributes });
-    
+
     function handleDetailView(detailItem: DetailItem) {
         const contentListAttributes = getAttributesWithClasses(props, "Details view", null);
-    
+
         const detailModel = {
             Attributes: contentListAttributes,
             DetailItem: detailItem,
-            ViewName: props.Properties.SfDetailViewName
+            ViewName: props.model.Properties.SfDetailViewName
         } as ContentListModelDetail;
 
         setData({ detailModel, listModel: null, attributes });
@@ -36,96 +30,96 @@ export function ContentList(props: ModelBase<ContentListEntity>) {
 
     function handleListView() {
         const listFieldMapping: {[key: string]: string} = {};
-        props.Properties.ListFieldMapping.forEach((entry) => {
+        props.model.Properties.ListFieldMapping.forEach((entry) => {
             listFieldMapping[entry.FriendlyName] = entry.Name;
         });
 
         const fieldCssClassMap: {[key: string]: string} = {};
-        props.Properties.CssClasses.forEach((entry) => {
+        props.model.Properties.CssClasses.forEach((entry) => {
             fieldCssClassMap[entry.FieldName] = entry.CssClass;
         });
 
-        const items = ContentListRestService.getItems(props.Properties, props.requestContext.DetailItem);
+        const items = ContentListRestService.getItems(props.model.Properties, props.requestContext.detailItem);
 
         let contentListMasterModel: ContentListModelMaster = {
             OnDetailsOpen: ((sdkItem) => {
-                const selectedContent = props.Properties.SelectedItems.Content[0];
+                const selectedContent = props.model.Properties.SelectedItems.Content[0];
                 const detailItem: DetailItem = {
                     Id: sdkItem.Id,
                     ProviderName: sdkItem.Provider,
                     ItemType: selectedContent.Type
                 };
-        
-                if (props.Properties.DetailPageMode === "SamePage") {
+
+                if (props.model.Properties.DetailPageMode === "SamePage") {
                     handleDetailView(detailItem);
-        
+
                     const newUrl = window.location.origin + window.location.pathname + sdkItem.ItemDefaultUrl + window.location.search;
                     window.history.pushState(detailItem, '', newUrl);
-                } else if (props.Properties.DetailPage) {
-                    RestService.getItem(RestSdkTypes.Pages, props.Properties.DetailPage.ItemIdsOrdered[0], props.Properties.DetailPage.Content[0].Variations[0].Source).then((page: SdkItem) => {
+                } else if (props.model.Properties.DetailPage) {
+                    RestService.getItem(RestSdkTypes.Pages, props.model.Properties.DetailPage.ItemIdsOrdered[0], props.model.Properties.DetailPage.Content[0].Variations[0].Source).then((page: SdkItem) => {
                         const newUrl = (page as PageItem).ViewUrl + sdkItem.ItemDefaultUrl;
                         window.location.href = newUrl;
                     });
                 }
             }),
-            OpenDetails: !(props.Properties.ContentViewDisplayMode === "Master" && props.Properties.DetailPageMode === "SamePage"),
+            OpenDetails: !(props.model.Properties.ContentViewDisplayMode === "Master" && props.model.Properties.DetailPageMode === "SamePage"),
             FieldCssClassMap: fieldCssClassMap,
             FieldMap: listFieldMapping,
             Items: items,
-            ViewName: props.Properties.SfViewName as any,
+            ViewName: props.model.Properties.SfViewName as any,
             Attributes: getAttributesWithClasses(props, "Content list", "row row-cols-1 row-cols-md-3")
         };
 
         setData({ listModel: contentListMasterModel, detailModel: null, attributes });
     }
 
-    props.Properties.DetailPageMode = props.Properties.DetailPageMode || "SamePage";
-    props.Properties.ContentViewDisplayMode = props.Properties.ContentViewDisplayMode || "Automatic";
-    props.Properties.Attributes = props.Properties.Attributes || {};
-    props.Properties.CssClasses = props.Properties.CssClasses || [];
-    props.Properties.ListFieldMapping = props.Properties.ListFieldMapping || [];
-    props.Properties.OrderBy = props.Properties.OrderBy || "PublicationDate DESC";
-    props.Properties.ListSettings = props.Properties.ListSettings || {};
-    props.Properties.ListSettings.DisplayMode = props.Properties.ListSettings.DisplayMode || "All";
-    props.Properties.ListSettings.ItemsPerPage = props.Properties.ListSettings.ItemsPerPage || 20;
-    props.Properties.ListSettings.LimitItemsCount = props.Properties.ListSettings.LimitItemsCount || 20;
-    props.Properties.SelectExpression = props.Properties.SelectExpression || "*";
-    props.Properties.SelectionGroupLogicalOperator = props.Properties.SelectionGroupLogicalOperator || "AND";
+    props.model.Properties.DetailPageMode = props.model.Properties.DetailPageMode || "SamePage";
+    props.model.Properties.ContentViewDisplayMode = props.model.Properties.ContentViewDisplayMode || "Automatic";
+    props.model.Properties.Attributes = props.model.Properties.Attributes || {};
+    props.model.Properties.CssClasses = props.model.Properties.CssClasses || [];
+    props.model.Properties.ListFieldMapping = props.model.Properties.ListFieldMapping || [];
+    props.model.Properties.OrderBy = props.model.Properties.OrderBy || "PublicationDate DESC";
+    props.model.Properties.ListSettings = props.model.Properties.ListSettings || {};
+    props.model.Properties.ListSettings.DisplayMode = props.model.Properties.ListSettings.DisplayMode || "All";
+    props.model.Properties.ListSettings.ItemsPerPage = props.model.Properties.ListSettings.ItemsPerPage || 20;
+    props.model.Properties.ListSettings.LimitItemsCount = props.model.Properties.ListSettings.LimitItemsCount || 20;
+    props.model.Properties.SelectExpression = props.model.Properties.SelectExpression || "*";
+    props.model.Properties.SelectionGroupLogicalOperator = props.model.Properties.SelectionGroupLogicalOperator || "AND";
 
     useEffect(() => {
-        if (props.Properties.ContentViewDisplayMode === "Automatic") {
-            if (props.requestContext.DetailItem) {
-                handleDetailView(props.requestContext.DetailItem);
+        if (props.model.Properties.ContentViewDisplayMode === "Automatic") {
+            if (props.requestContext.detailItem) {
+                handleDetailView(props.requestContext.detailItem);
             } else {
                 handleListView();
             }
-        } else if (props.Properties.ContentViewDisplayMode === "Detail") {
-            if (props.Properties.SelectedItems && props.Properties.SelectedItems.Content && props.Properties.SelectedItems.Content.length > 0) {
-                const selectedContent = props.Properties.SelectedItems.Content[0];
+        } else if (props.model.Properties.ContentViewDisplayMode === "Detail") {
+            if (props.model.Properties.SelectedItems && props.model.Properties.SelectedItems.Content && props.model.Properties.SelectedItems.Content.length > 0) {
+                const selectedContent = props.model.Properties.SelectedItems.Content[0];
                 handleDetailView({
-                    Id: props.Properties.SelectedItems.ItemIdsOrdered[0],
+                    Id: props.model.Properties.SelectedItems.ItemIdsOrdered[0],
                     ItemType: selectedContent.Type,
                     ProviderName: selectedContent.Variations[0].Source
                 });
             }
-        } else if (props.Properties.ContentViewDisplayMode === "Master") {
+        } else if (props.model.Properties.ContentViewDisplayMode === "Master") {
             handleListView();
         }
     }, [props]);
-    
+
 
     return (
         <div {...data.attributes as any}>
             {data.detailModel && <ContentListDetail detailModel={data.detailModel}></ContentListDetail>}
             {data.listModel && <ContentListMaster model={data.listModel}></ContentListMaster>}
-        </div> 
+        </div>
     );
 }
 
-function getAttributesWithClasses(props: ModelBase<ContentListEntity>, fieldName: string, additiinalClasses: string | null): Array<{ Key: string, Value: string}> {
-    const viewCss = props.Properties.CssClasses.find(x => x.FieldName === fieldName);
+function getAttributesWithClasses(props: WidgetContext<ContentListEntity>, fieldName: string, additionalClasses: string | null): Array<{ Key: string, Value: string}> {
+    const viewCss = props.model.Properties.CssClasses.find(x => x.FieldName === fieldName);
 
-    const contentListAttributes = props.Properties.Attributes["ContentList"] || [];
+    const contentListAttributes = props.model.Properties.Attributes["ContentList"] || [];
     let classAttribute = contentListAttributes.find(x => x.Key === "class");
     if (!classAttribute) {
         classAttribute = {
@@ -140,8 +134,8 @@ function getAttributesWithClasses(props: ModelBase<ContentListEntity>, fieldName
         classAttribute.Value += ` ${viewCss.CssClass}`;
     }
 
-    if (additiinalClasses)
-        classAttribute.Value += ` ${additiinalClasses}`;
+    if (additionalClasses)
+        classAttribute.Value += ` ${additionalClasses}`;
 
     return contentListAttributes;
 }

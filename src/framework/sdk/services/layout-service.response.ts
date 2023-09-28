@@ -1,4 +1,4 @@
-import { ModelBase } from "../../components/interfaces";
+import { WidgetModel } from "../../widgets/widget-metadata";
 import { DetailItem } from "./detail-item";
 
 export interface PageLayoutServiceResponse {
@@ -30,6 +30,6 @@ export interface PageScript {
 }
 
 export interface ComponentContext {
-    Components: ModelBase<any>[];
+    Components: WidgetModel<any>[];
     HasLazyComponents: boolean;
 }

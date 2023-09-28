@@ -34,7 +34,7 @@ export class LayoutService {
 
         url = RootUrlService.getUrl() + url.substring(1);
 
-        return fetch(url).then(x => x.json());
+        return fetch(url, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
     }
 
     public static getLazyComponents(pagePathAndQuery: string): Promise<LazyComponentsResponse> {

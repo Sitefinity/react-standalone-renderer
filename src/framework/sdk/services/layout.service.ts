@@ -1,27 +1,26 @@
 import { RootUrlService } from "../root-url.service";
-import { ErrorResponse } from "./error.response";
 import { PageLayoutServiceResponse } from "./layout-service.response";
 import { LazyComponentsResponse } from "./lazy-components.response";
 
 export class LayoutService {
 
-    public static get(pagePathAndQuery: string, action: string | null, headers: { [key: string]: string } = {}): Promise<PageLayoutServiceResponse | ErrorResponse> {
+    public static get(pagePath: string, action: string | null, headers: { [key: string]: string } = {}): Promise<PageLayoutServiceResponse> {
         let url = null;
 
-        let indexOfSitefinityTemplate = pagePathAndQuery.indexOf("Sitefinity/Template/");
+        let indexOfSitefinityTemplate = pagePath.indexOf("Sitefinity/Template/");
         if (indexOfSitefinityTemplate > 0) {
             let id = null;
             let indexOfGuid = indexOfSitefinityTemplate + "Sitefinity/Template/".length;
-            let nextIndexOfSlash = pagePathAndQuery.indexOf("/", indexOfGuid);
+            let nextIndexOfSlash = pagePath.indexOf("/", indexOfGuid);
             if (nextIndexOfSlash === -1) {
-                id = pagePathAndQuery.substring(indexOfGuid);
+                id = pagePath.substring(indexOfGuid);
             } else {
-                id = pagePathAndQuery.substring(indexOfGuid, nextIndexOfSlash);
+                id = pagePath.substring(indexOfGuid, nextIndexOfSlash);
             }
 
             url = `/api/default/templates/${id}/Default.Model()`
         } else {
-            url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePathAndQuery)}'`;
+            url = `/api/default/pages/Default.Model(url=@param)?@param='${encodeURIComponent(pagePath)}'`;
         }
 
         if (action) {
@@ -30,14 +29,13 @@ export class LayoutService {
                 concatChar = '&';
             }
 
-            url += `${concatChar}sfaction={action}`;
+            url += `${concatChar}sfaction=${action}`;
         }
 
         url = RootUrlService.getUrl() + url.substring(1);
+        headers["X-Requested-With"] = "react";
 
-        return fetch(url, { headers: headers }).then(x => {
-            return x.json();
-        });
+        return fetch(url, { headers }).then(x => x.json());
     }
 
     public static getLazyComponents(pagePathAndQuery: string): Promise<LazyComponentsResponse> {

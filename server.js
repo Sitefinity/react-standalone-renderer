@@ -21,10 +21,10 @@ app.prepare().then(() => {
         changeOrigin: true,
         selfHandleResponse: true,
         onProxyReq: (proxyReq, req, res) => {
-            if (process.env.PROXY_SF_CLOUD_KEY && process.env.PORT) {
+            if (process.env.SF_CLOUD_KEY && process.env.PORT) {
                 // for Sitefinity cloud
                 proxyReq.setHeader('X-SF-BYPASS-HOST', `localhost:${process.env.PORT}`);
-                proxyReq.setHeader('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.PROXY_SF_CLOUD_KEY);
+                proxyReq.setHeader('X-SF-BYPASS-HOST-VALIDATION-KEY', process.env.SF_CLOUD_KEY);
             } else if (process.env.PORT && process.env.PROXY_ORIGINAL_HOST) {
                 // when using a custom port
                 proxyReq.setHeader('X-ORIGINAL-HOST', `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`);

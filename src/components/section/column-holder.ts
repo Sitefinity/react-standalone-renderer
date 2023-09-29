@@ -1,4 +1,4 @@
-import { ModelBase } from "../interfaces";
+import { WidgetModel } from "@/framework/widgets/widget-model";
 
 export interface ColumnHolder {
     Children: Array<ComponentContainer>
@@ -7,5 +7,5 @@ export interface ColumnHolder {
 }
 
 export interface ComponentContainer {
-    model: ModelBase<any>;
+    model: WidgetModel<any>;
 }

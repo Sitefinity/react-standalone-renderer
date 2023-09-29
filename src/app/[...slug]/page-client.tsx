@@ -1,13 +1,17 @@
 
 'use client'
 
-import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
-import { RendererContractImpl } from '@/editor/renderer-contract';
-import { RenderContext } from '@/services/render-context';
+import { ServiceMetadata, ServiceMetadataDefinition } from "@/framework/sdk/service-metadata";
+import { PageLayoutServiceResponse } from "@/framework/sdk/services/layout-service.response";
+import { RenderWidgetService } from "@/framework/services/render-widget-service";
+import { RequestContext } from "@/framework/services/request-context";
+import { RendererContractImpl } from "@/renderer-contract";
+import { widgets } from "@/widget-registry";
 
-export default function PageClient({ layout }: { layout: PageLayoutServiceResponse }) {
+export default function PageClient({ layout, metadata, context }: { layout: PageLayoutServiceResponse, metadata: ServiceMetadataDefinition, context: RequestContext }) {
 
-    if (RenderContext.isEdit()) {
+    if (context.isEdit && typeof window !== 'undefined') {
+        ServiceMetadata.serviceMetadataCache = metadata;
         const timeout = 2000;
         const start = new Date().getTime();
         const handle = window.setInterval(() => {
@@ -18,8 +22,9 @@ export default function PageClient({ layout }: { layout: PageLayoutServiceRespon
             const timePassed = new Date().getTime() - start;
             if ((layout.ComponentContext.Components.length > 0 && document.body.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                 window.clearInterval(handle);
-
-                (window as any)["rendererContract"] = new RendererContractImpl();
+                
+                const renderWidgetService = new RenderWidgetService(widgets);
+                (window as any)["rendererContract"] = new RendererContractImpl(renderWidgetService);
                 window.dispatchEvent(new Event('contractReady'));
             }
         }, 1000);

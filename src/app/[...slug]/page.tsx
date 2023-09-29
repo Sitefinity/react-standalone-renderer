@@ -1,103 +1,51 @@
 
-import { ServiceMetadata } from '../../sdk/service-metadata';
-import { RestService } from '../../sdk/rest-service';
-import { GetAllArgs } from '../../sdk/services/get-all-args';
 import { Fragment } from 'react';
-import { LayoutService } from '@/sdk/services/layout.service';
-import { ModelBase } from '@/components/interfaces';
-import { RequestContext } from '@/services/request-context';
-import { RenderWidgetService } from '@/services/render-widget-service';
 import { notFound } from 'next/navigation';
-import { ErrorResponse } from '@/sdk/services/error.response';
-import { PageLayoutServiceResponse } from '@/sdk/services/layout-service.response';
 import PageClient from './page-client';
 import { cookies } from 'next/headers';
+import { ServiceMetadata } from '@/framework/sdk/service-metadata';
+import { PageLayoutServiceResponse } from '@/framework/sdk/services/layout-service.response';
+import { LayoutService } from '@/framework/sdk/services/layout.service';
+import { RenderWidgetService } from '@/framework/services/render-widget-service';
+import { WidgetModel } from '@/framework/widgets/widget-model';
+import { RequestContext } from '@/framework/services/request-context';
+import { widgets } from '@/widget-registry';
+import { RendererContractImpl } from '@/renderer-contract';
 
-export async function generateStaticParams() {
-    const getAllArgs: GetAllArgs = {
-        Skip: 0,
-        Take: 50,
-        Count: true,
-        Fields: ["ViewUrl", "Renderer"],
-        Type: "Telerik.Sitefinity.Pages.Model.PageNode",
-    };
+// export async function generateStaticParams() {
+//     const getAllArgs: GetAllArgs = {
+//         Skip: 0,
+//         Take: 50,
+//         Count: true,
+//         Fields: ["ViewUrl", "Renderer"],
+//         Type: "Telerik.Sitefinity.Pages.Model.PageNode",
+//     };
 
-    await ServiceMetadata.fetch();
-
-    const filteredItems = [];
-    while (true) {
-        let items = await RestService.getItems(getAllArgs);
-        let response = items.Items;
-        if (response.length === 0) {
-            break;
-        }
-
-        let filtered = response.filter(x => x["Renderer"] === 'React').map(x => x["ViewUrl"]);
-        if (filtered.length > 0) {
-            filteredItems.push(...filtered);
-        }
-
-        getAllArgs.Skip = (getAllArgs.Skip as number) + (getAllArgs.Take as number);
-    }
-
-    return filteredItems.map((relativeUrl) => {
-        return {
-            slug: relativeUrl.split('/').splice(1),
-        }
-    });
-}
-
-interface AppState {
-    culture: string;
-    siteId: string;
-    content: ModelBase<any>[];
-    id: string;
-    requestContext: RequestContext
-}
-
-interface PageParams {
-    params: {
-        slug: string[]
-    },
-    searchParams: { [key:string]: string }
-}
-
-// export async function generateMetadata({ params, searchParams }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
 //     await ServiceMetadata.fetch();
 
-//     const actionParam = searchParams['sfaction'];
-//     const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam);
-
-//     const errorResponse = layoutOrError as ErrorResponse;
-//     if (errorResponse.error && errorResponse.error.code) {
-//         if (errorResponse.error.code === "NotFound") {
-//             return notFound();
+//     const filteredItems = [];
+//     while (true) {
+//         let items = await RestService.getItems(getAllArgs);
+//         let response = items.Items;
+//         if (response.length === 0) {
+//             break;
 //         }
 
-//         throw errorResponse.error.code;
-//     }
-//     const layout = layoutOrError as PageLayoutServiceResponse;
-
-//     const metadata: Metadata = {
-//         title: layout.MetaInfo.Title,
-//         alternates: {
-//             canonical: layout.MetaInfo.CanonicalUrl,
+//         let filtered = response.filter(x => x["Renderer"] === 'React').map(x => x["ViewUrl"]);
+//         if (filtered.length > 0) {
+//             filteredItems.push(...filtered);
 //         }
+
+//         getAllArgs.Skip = (getAllArgs.Skip as number) + (getAllArgs.Take as number);
 //     }
 
-//     if (layout.MetaInfo.OpenGraphType) {
-//         metadata.openGraph = {
-//             title: layout.MetaInfo.OpenGraphTitle,
-//             description: layout.MetaInfo.OpenGraphDescription,
-//             images: layout.MetaInfo.OpenGraphImage,
-//             videos: layout.MetaInfo.OpenGraphVideo,
-//             type: layout.MetaInfo.OpenGraphType as any,
-//             siteName: layout.MetaInfo.OpenGraphSite
-//         };
-//     }
-
-//     return metadata;
+//     return filteredItems.map((relativeUrl) => {
+//         return {
+//             slug: relativeUrl.split('/').splice(1),
+//         }
+//     });
 // }
+
 
 export default async function Page({ params, searchParams }: PageParams) {
     await ServiceMetadata.fetch();
@@ -107,12 +55,17 @@ export default async function Page({ params, searchParams }: PageParams) {
     let headers: { [key: string]: string } = {};
     if (process.env.NODE_ENV === 'development' && actionParam) {
         const cookie = cookies().toString();
-        headers = { "Cookie": cookie, "x-original-host": `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`, "x-requested-with": "" };
+        headers = { "Cookie": cookie };
+        if (process.env.SF_CLOUD_KEY) {
+            headers['X-SF-BYPASS-HOST'] = `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`;
+            headers['X-SF-BYPASS-HOST-VALIDATION-KEY'] = process.env.SF_CLOUD_KEY;
+        } else {
+            headers["x-original-host"] = `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`;
+        }
     }
 
     const layoutOrError = await LayoutService.get(params.slug.join("/"), actionParam, headers);
-
-    const errorResponse = layoutOrError as ErrorResponse;
+    const errorResponse = layoutOrError as any;
     if (errorResponse.error && errorResponse.error.code) {
         if (errorResponse.error.code === "NotFound") {
             return notFound();
@@ -124,22 +77,34 @@ export default async function Page({ params, searchParams }: PageParams) {
     const layout = layoutOrError as PageLayoutServiceResponse;
 
     let appState : AppState = {
-        culture: layout.Culture,
-        siteId: layout.SiteId,
-        content: layout.ComponentContext.Components,
-        id: layout.Id,
         requestContext: {
-            DetailItem: layout.DetailItem,
-            LazyComponentMap: null,
-        }
+            detailItem: layout.DetailItem,
+            culture: layout.Culture,
+            isEdit: searchParams["sfaction"] === "edit",
+            isPreview: searchParams["sfaction"] === "preview",
+        },
+        widgets: layout.ComponentContext.Components
     };
 
+    let renderWidgetService = new RenderWidgetService(widgets);
     return (
         <Fragment>
-            <PageClient layout={layout} />
-            {appState.content.map((child) => {
-                return RenderWidgetService.createComponent(child, appState.requestContext);
+            <PageClient metadata={ServiceMetadata.serviceMetadataCache} layout={layout} context={appState.requestContext} />
+            {appState.widgets.map((child) => {
+                return renderWidgetService.createComponent(child, appState.requestContext);
             })}
         </Fragment>
     )
+}
+
+interface AppState {
+    requestContext: RequestContext;
+    widgets: WidgetModel<any>[];
+}
+
+interface PageParams {
+    params: {
+        slug: string[]
+    },
+    searchParams: { [key:string]: string }
 }

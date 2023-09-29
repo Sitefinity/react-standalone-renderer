@@ -1,3 +1,4 @@
+import { WidgetModel } from "../widgets/widget-model";
 
 export interface RendererContract {
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata>;
@@ -22,18 +23,13 @@ export interface Script {
     id: string;
 }
 
-export interface Script {
-    src: string;
-    id: string;
-}
-
 export interface WidgetItem {
     name: string;
-    title: string;
-    addWidgetTitle: string | null;
-    addWidgetName: string | null;
+    title?: string;
+    addWidgetTitle?: string;
+    addWidgetName?: string;
     thumbnailUrl?: string;
-    initialProperties: Array<{ name: string, value: string}>
+    initialProperties?: Array<{ name: string, value: string}>
 }
 
 export interface WidgetSection {
@@ -44,7 +40,7 @@ export interface WidgetSection {
 export interface RenderWidgetArgs {
     dataItem: DataItem;
     siteId: string;
-    model: WidgetModel;
+    model: WidgetModel<any>;
     token?: Token;
 }
 export interface GetCategoriesArgs {
@@ -87,38 +83,13 @@ export interface PropertyMetadata {
 
 export interface SectionGroup {
     Name: string;
-
     Sections: SectionData[];
 }
 
 export interface SectionData {
-    /**
-     * The section name
-     *
-     * @memberof {SectionData}
-     */
-      Name: string,
-
-    /**
-     * The section title
-     *
-     * @memberof {SectionData}
-     */
-      Title: string
-
-    /**
-     * Collection of properties
-     *
-     * @memberof {SectionData}
-     */
-      Properties: Array<PropertyMetadata>
-}
-
-
-export interface WidgetModel {
-    Id: string;
-    Name: string;
-    Properties: {[key: string]: string};
+    Name: string,
+    Title: string
+    Properties: Array<PropertyMetadata>
 }
 
 export interface Token {
@@ -128,13 +99,6 @@ export interface Token {
 
 export interface DataItem {
     readonly provider: string;
-    /**
-     * Gets the assigned culture of the item.
-     */
     readonly culture: string;
-
-    /**
-     * Gets the identifier of the item. Returns null if there is no item.
-     */
     readonly key: string;
 }

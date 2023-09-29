@@ -7,13 +7,13 @@ export class RootUrlService {
             return `${process.env["NEXT_CMS_URL"]}/`;
         }
 
-        // when rendering client side with next.js
+        // when rendering runtime with next.js
         if (process.env["NEXT_PUBLIC_CMS_URL"]) {
             return `${process.env["NEXT_PUBLIC_CMS_URL"]}/`;
         }
 
         // when hosting th bundle in the CMS (for content editors)
-        throw "Can't get url in this context"
+        return `${window.location.origin}/`;
     }
 
     public static getServiceUrl() {

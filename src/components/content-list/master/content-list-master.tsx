@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { ContentListModelMaster } from "./content-list-master-model";
 import { ContentListModelbase } from "./content-list-model-base";
-import { ImageItem } from "../../../sdk/dto/image-item";
 import { ItemModel, ListWithSummaryModel } from "./list-with-summary/list-with-summary-model";
 import { ListWithImage } from "./list-with-image/list-with-image";
 import { ListWithImageModel } from "./list-with-image/list-with-image-model";
 import { ListWithSummary } from "./list-with-summary/list-with-summary";
 import { CardsList } from "./cards-list/cards-list";
 import { CardsListModel } from "./cards-list/cards-list-model";
+import { ImageItem } from "@/framework/sdk/dto/image-item";
 
 export function ContentListMaster(props: { model: ContentListModelMaster }) {
     const [data, setData] = useState<{ viewName: string, model: ContentListModelbase }>();

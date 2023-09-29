@@ -1,51 +1,53 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
-import { ModelBase } from "../interfaces";
-import { htmlAttributes, RenderWidgetService } from "../../services/render-widget-service";
+import { ImageItem } from "@/framework/sdk/dto/image-item";
+import { VideoItem } from "@/framework/sdk/dto/video-item";
+import { RestService, RestSdkTypes } from "@/framework/sdk/rest-service";
+import { RootUrlService } from "@/framework/sdk/root-url.service";
+import { htmlAttributes } from "@/framework/widgets/attributes";
+import { WidgetContext } from "@/framework/widgets/widget-context";
+import { useState, useEffect } from "react";
+import { StyleGenerator } from "../styling/style-generator.service";
+import { StylingConfig } from "../styling/styling-config";
 import { ColumnHolder, ComponentContainer } from "./column-holder";
 import { SectionHolder } from "./section-holder";
 import { SectionEntity } from "./section.entity";
-import { StyleGenerator } from "../../styling/style-generator.service";
-import { StylingConfig } from "../../styling/styling-config";
-import { RestSdkTypes, RestService } from "../../sdk/rest-service";
-import { ImageItem } from "../../sdk/dto/image-item";
-import { RenderContext } from "../../services/render-context";
-import { VideoItem } from "../../sdk/dto/video-item";
-import { RootUrlService } from "../../sdk/root-url.service";
+import { RequestContext } from "@/framework/services/request-context";
+
 const ColumnNamePrefix = "Column";
 const sectionKey = "Section";
 
-export function Section(props: ModelBase<SectionEntity>) {
+export function Section(props: WidgetContext<SectionEntity>) {
 
-    const [data, setData] = useState<State>({ Columns: [], Section: { Attributes: {} } });
+    const [data, setData] = useState<State>({ columns: [], section: { Attributes: {} }, requestContext: props.requestContext });
 
     useEffect(() => {
-        props.Properties.ColumnsCount = props.Properties.ColumnsCount || 1;
-        props.Properties.ColumnProportionsInfo = props.Properties.ColumnProportionsInfo || "[12]";
+        props.model.Properties.ColumnsCount = props.model.Properties.ColumnsCount || 1;
+        props.model.Properties.ColumnProportionsInfo = props.model.Properties.ColumnProportionsInfo || "[12]";
         const columns = populateColumns(props);
-        populateSection(props.Properties).then((section) => {
-            const dataAttributes = htmlAttributes(props, null, null);
+        populateSection(props.model.Properties).then((section) => {
+            const dataAttributes = htmlAttributes(props);
             section.Attributes = Object.assign(section.Attributes, dataAttributes);
             setData({
-                Columns: columns,
-                Section: section
+                columns: columns,
+                section: section,
+                requestContext: props.requestContext
             })
         });
-    }, [props, props.Properties]);
+    }, [props]);
 
     return (
-        <section {...data.Section.Attributes } style={data.Section.Style}>
-            {data.Section.ShowVideo && data.Section.VideoUrl &&
+        <section {...data.section.Attributes } style={data.section.Style}>
+            {data.section.ShowVideo && data.section.VideoUrl &&
                 <video className="sc-video__element" autoPlay muted loop>
                     <source src="{{viewModel.Section.VideoUrl}}" />
                 </video>
             }
-            {data.Columns.map((x, i) => {
+            {data.columns.map((x, i) => {
                 return (
-                    <div key={i} {...x.Attributes} style={data.Section.Style}>
+                    <div key={i} {...x.Attributes} style={data.section.Style}>
                         {x.Children.map(y => {
-                            return RenderWidgetService.createComponent(y.model, y.model.requestContext)
+                            return props.renderWidgetService.createComponent(y.model, data.requestContext)
                         })}
                     </div>
                 )
@@ -54,9 +56,9 @@ export function Section(props: ModelBase<SectionEntity>) {
     );
 }
 
-function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
+function populateColumns(context: WidgetContext<SectionEntity>): ColumnHolder[] {
     let columns: ColumnHolder[] = [];
-    const properties = model.Properties;
+    const properties = context.model.Properties;
 
     for (let i = 0; i < properties.ColumnsCount; i++) {
         let currentName = `${ColumnNamePrefix}${i + 1}`;
@@ -64,12 +66,16 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
         const classAttribute = `col-md-${properties.ColumnProportionsInfo[i]}`;
         const classAttributes = [classAttribute];
         let children: Array<ComponentContainer> = [];
-        if (model.Children) {
-            children = model.Children.filter(x => x.PlaceHolder === currentName).map((x => {
-                x.requestContext = model.requestContext;
-                return {
+        if (context.model.Children) {
+            children = context.model.Children.filter(x => x.PlaceHolder === currentName).map((x => {
+                let ret: WidgetContext<any> = {
                     model: x,
+                    metadata: context.renderWidgetService.registry.widgets[x.Name],
+                    renderWidgetService: context.renderWidgetService,
+                    requestContext: context.requestContext
                 }
+
+                return ret;
             }));
         }
 
@@ -78,7 +84,7 @@ function populateColumns(model: ModelBase<SectionEntity>): ColumnHolder[] {
             Children: children
         };
 
-        if (RenderContext.isEdit()) {
+        if (context.requestContext.isEdit) {
             column.Attributes["data-sfcontainer"] = currentName;
 
             let currentTitle = null;
@@ -212,6 +218,7 @@ function populateSection(properties: SectionEntity): Promise<SectionHolder> {
 }
 
 interface State {
-    Columns: ColumnHolder[],
-    Section: SectionHolder
+    columns: ColumnHolder[],
+    section: SectionHolder,
+    requestContext: RequestContext
 }

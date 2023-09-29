@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { SdkItem } from "../../../sdk/dto/sdk-item";
-import { RestService } from "../../../sdk/rest-service";
 import { ContentListModelDetail } from "./content-list-detail-model";
+import { RestService } from "@/framework/sdk/rest-service";
+import { SdkItem } from "@/framework/sdk/dto/sdk-item";
 
 export function ContentListDetail(props: { detailModel: ContentListModelDetail }) {
     const [data, setData] = useState<State>();

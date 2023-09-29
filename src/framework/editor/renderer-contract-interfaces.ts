@@ -1,4 +1,4 @@
-import { WidgetModel } from "../widgets/widget-metadata";
+import { WidgetModel } from "../widgets/widget-model";
 
 export interface RendererContract {
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata>;
@@ -83,14 +83,13 @@ export interface PropertyMetadata {
 
 export interface SectionGroup {
     Name: string;
-
     Sections: SectionData[];
 }
 
 export interface SectionData {
-      Name: string,
-      Title: string
-      Properties: Array<PropertyMetadata>
+    Name: string,
+    Title: string
+    Properties: Array<PropertyMetadata>
 }
 
 export interface Token {

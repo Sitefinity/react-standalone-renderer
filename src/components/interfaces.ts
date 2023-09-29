@@ -1,4 +1,4 @@
-import { WidgetModel } from "../framework/widgets/widget-metadata";
+import { WidgetModel } from "../framework/widgets/widget-model";
 
 export interface MetaInfo {
     CanonicalUrl: string;

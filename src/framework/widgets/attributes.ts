@@ -1,4 +1,4 @@
-import { WidgetContext } from "./widget-metadata";
+import { WidgetContext } from "./widget-context";
 
 export function htmlAttributes(widgetContext: WidgetContext<any>) {
     const model = widgetContext.model;

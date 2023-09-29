@@ -8,8 +8,8 @@ import { ImageItem } from "../../framework/sdk/dto/image-item";
 import { VideoItem } from "../../framework/sdk/dto/video-item";
 import { RestService, RestSdkTypes } from "../../framework/sdk/rest-service";
 import { RootUrlService } from "../../framework/sdk/root-url.service";
-import { WidgetContext } from "../../framework/widgets/widget-metadata";
-import { htmlAttributes } from "../../framework/widgets/utils";
+import { WidgetContext } from "../../framework/widgets/widget-context";
+import { htmlAttributes } from "../../framework/widgets/attributes";
 import { RequestContext } from "../../framework/services/request-context";
 
 const ColumnNamePrefix = "Column";

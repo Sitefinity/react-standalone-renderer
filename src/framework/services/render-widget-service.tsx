@@ -1,6 +1,8 @@
 import React from "react";
 import { RequestContext } from "./request-context";
-import { WidgetContext, WidgetModel, WidgetRegistry } from "../widgets/widget-metadata";
+import { WidgetContext } from "../widgets/widget-context";
+import { WidgetModel } from "../widgets/widget-model";
+import { WidgetRegistry } from "../widgets/widget-registry";
 
 export class RenderWidgetService {
 

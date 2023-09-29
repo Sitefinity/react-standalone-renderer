@@ -9,8 +9,8 @@ import { PageItem } from "../../framework/sdk/dto/page-item";
 import { SdkItem } from "../../framework/sdk/dto/sdk-item";
 import { RestService, RestSdkTypes } from "../../framework/sdk/rest-service";
 import { DetailItem } from "../../framework/sdk/services/detail-item";
-import { htmlAttributes } from "../../framework/widgets/utils";
-import { WidgetContext } from "../../framework/widgets/widget-metadata";
+import { htmlAttributes } from "../../framework/widgets/attributes";
+import { WidgetContext } from "../../framework/widgets/widget-context";
 
 export function ContentList(props: WidgetContext<ContentListEntity>) {
     const attributes = htmlAttributes(props);

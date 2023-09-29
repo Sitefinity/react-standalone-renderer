@@ -1,4 +1,4 @@
-import { WidgetModel } from "../../widgets/widget-metadata";
+import { WidgetModel } from "../../widgets/widget-model";
 import { DetailItem } from "./detail-item";
 
 export interface PageLayoutServiceResponse {

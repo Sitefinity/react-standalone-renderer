@@ -1,4 +1,4 @@
-import { ContentVariation, ContentContext } from "../../framework/editor/designer-entities/mixed-content-context";
+import { ContentVariation, ContentContext } from "../../framework/widgets/entities/mixed-content-context";
 import { CollectionResponse } from "../../framework/sdk/dto/collection-response";
 import { SdkItem } from "../../framework/sdk/dto/sdk-item";
 import { CombinedFilter } from "../../framework/sdk/filters/combined-filter";

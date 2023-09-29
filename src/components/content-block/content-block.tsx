@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RestService } from "../../framework/sdk/rest-service";
-import { WidgetContext } from "../../framework/widgets/widget-metadata";
-import { htmlAttributes } from "../../framework/widgets/utils";
+import { WidgetContext } from "../../framework/widgets/widget-context";
+import { htmlAttributes } from "../../framework/widgets/attributes";
 
 export function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
     const [data, setData] = useState<State>({ content: "", attributes: {} });

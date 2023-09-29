@@ -1,50 +1,14 @@
 
 import React, { useEffect, useState, Fragment } from 'react';
-import { RendererContractImpl } from './framework/editor/renderer-contract';
+import { RendererContractImpl } from './renderer-contract';
 import { RootUrlService } from './framework/sdk/root-url.service';
 import { ServiceMetadata } from './framework/sdk/service-metadata';
 import { PageLayoutServiceResponse } from './framework/sdk/services/layout-service.response';
 import { LayoutService } from './framework/sdk/services/layout.service';
 import { RenderWidgetService } from './framework/services/render-widget-service';
-
-import { ContentBlock } from './components/content-block/content-block';
-import { Section } from './components/section/section';
-import { ContentList } from './components/content-list/content-list';
-
-import sitefinityContentBlockJson from './components/content-block/designer-metadata.json'
-import sitefinitySectionJson from './components/section/designer-metadata.json';
-import sitefinityContentListJson from './components/content-list/designer-metadata.json';
-import { WidgetModel, WidgetRegistry } from './framework/widgets/widget-metadata';
 import { RequestContext } from './framework/services/request-context';
-
-const widgets: WidgetRegistry = {
-    widgets: {
-        "SitefinityContentBlock":  {
-            designerMetadata: sitefinityContentBlockJson,
-            componentType: ContentBlock,
-            editorMetadata: {
-                Title: "Content block"
-            }
-        },
-        "SitefinitySection": {
-            designerMetadata: sitefinitySectionJson,
-            componentType: Section,
-            selectorCategory: 'Layout',
-            editorMetadata: {
-                Title: "Section"
-            }
-        },
-        "SitefinityContentList": {
-            designerMetadata: sitefinityContentListJson,
-            componentType: ContentList,
-            editorMetadata: {
-                Title: "Content list",
-                EmptyIconText: "Select content",
-                EmptyIcon: "plus-circle",
-            },
-        }
-    }
-}
+import { widgets } from './widget-registry';
+import { WidgetModel } from './framework/widgets/widget-model';
 
 export function App() {
     const [appState, setAppState] = useState<AppState>();

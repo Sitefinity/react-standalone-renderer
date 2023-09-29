@@ -62,7 +62,8 @@ export function App() {
                 widgets: layout.ComponentContext.Components
             });
 
-            getRootElement().classList.add("container-fluid");
+            const rootElement = document.body;
+            rootElement.classList.add("container-fluid");
             if (requestContext.isEdit) {
                 const timeout = 2000;
                 const start = new Date().getTime();
@@ -70,13 +71,13 @@ export function App() {
                     if (!layout)
                         return;
 
-                    document.body.setAttribute('data-sfcontainer', '')
-                    getRootElement().setAttribute('data-sfcontainer', 'Body');
+                    document.body.setAttribute('data-sfcontainer', 'Body')
+
                     // we do not know the exact time when react has finished the rendering process.
                     // thus we check every 100ms for dom changes. A proper check would be to see if every single
                     // component is rendered
                     const timePassed = new Date().getTime() - start;
-                    if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
+                    if ((layout.ComponentContext.Components.length > 0 && rootElement.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
 
                         (window as any)["rendererContract"] = new RendererContractImpl(new RenderWidgetService(widgets));
@@ -86,7 +87,7 @@ export function App() {
             }
 
             renderSeoMeta(layout);
-            renderScripts(layout);
+            renderScripts(layout, rootElement);
         }
 
         getLayout();
@@ -105,7 +106,7 @@ export function App() {
 
 export default App;
 
-function renderScripts(response: PageLayoutServiceResponse) {
+function renderScripts(response: PageLayoutServiceResponse, rootElement: HTMLElement) {
     response.Scripts.forEach((script) => {
         const scriptElement = document.createElement('script');
         if (script.Source) {
@@ -124,7 +125,7 @@ function renderScripts(response: PageLayoutServiceResponse) {
             scriptElement.innerText = script.Value;
         }
 
-        getRootElement().appendChild(scriptElement);
+        rootElement.appendChild(scriptElement);
     });
 }
 
@@ -164,10 +165,6 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
             document.head.appendChild(linkElement);
         }
     }
-}
-
-export function getRootElement(): HTMLElement {
-    return (document.getElementById("root") || document.getElementById("__next")) as HTMLElement;
 }
 
 interface AppState {

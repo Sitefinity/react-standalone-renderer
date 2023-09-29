@@ -25,11 +25,11 @@ export interface Script {
 
 export interface WidgetItem {
     name: string;
-    title: string;
-    addWidgetTitle: string | null;
-    addWidgetName: string | null;
+    title?: string;
+    addWidgetTitle?: string;
+    addWidgetName?: string;
     thumbnailUrl?: string;
-    initialProperties: Array<{ name: string, value: string}>
+    initialProperties?: Array<{ name: string, value: string}>
 }
 
 export interface WidgetSection {

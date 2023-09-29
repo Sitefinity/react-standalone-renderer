@@ -10,7 +10,7 @@ export interface WidgetRegistry {
 export interface WidgetMetadata {
     componentType: any;
     designerMetadata: any;
-    selectorCategory?: "Layout & Presets" | "Content" | "Navigation & Search" | "Login & Users";
+    selectorCategory?: string;
     editorMetadata?: EditorMetadata
 }
 

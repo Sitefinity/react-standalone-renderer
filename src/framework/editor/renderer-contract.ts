@@ -1,6 +1,4 @@
-import { RendererContract, ComponentMetadata, GetWidgetMetadataArgs, RenderWidgetArgs, GetWidgetsArgs, TotalCountResult, WidgetSection, RenderResult, GetCategoriesArgs } from "./interfaces";
-import contentWidgetsJson from './designer-metadata/content-widgets.json';
-import layoutWidgetsJson from './designer-metadata/layout-widgets.json';
+import { RendererContract, ComponentMetadata, GetWidgetMetadataArgs, RenderWidgetArgs, GetWidgetsArgs, TotalCountResult, WidgetSection, RenderResult, GetCategoriesArgs, WidgetItem } from "./interfaces";
 import { RenderWidgetService } from "../services/render-widget-service";
 import { createRoot } from "react-dom/client";
 import { RequestContext } from "../services/request-context";
@@ -43,15 +41,27 @@ export class RendererContractImpl implements RendererContract {
     }
 
     getWidgets(args: GetWidgetsArgs): Promise<TotalCountResult<WidgetSection[]>> {
-        if (args.category === "Content") {
-            return Promise.resolve(contentWidgetsJson);
-        } else if (args.category === "Layout") {
-            return Promise.resolve(layoutWidgetsJson);
-        }
+        const widgetEntries = this.renderWidgetService.registry.widgets;
+        const filteredWidgets: WidgetItem[] = [];
+
+        Object.keys(widgetEntries).forEach((key) => {
+            const widgetEntry = widgetEntries[key];
+            if (widgetEntry.selectorCategory === args.category) {
+                filteredWidgets.push({
+                    name: key,
+                    title: widgetEntry.editorMetadata?.Title,
+                });
+            }
+        });
 
         return Promise.resolve({
-            totalCount: 0,
-            dataItems: []
+            totalCount: filteredWidgets.length,
+            dataItems: [
+                {
+                    title: "Default",
+                    widgets: filteredWidgets
+                }
+            ]
         });
     }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ContentListEntity } from "./content-list-entity";
 import { ContentListRestService } from "./content-list-rest.service";
 import { ContentListDetail } from "./detail/content-list-detail";
@@ -30,6 +30,7 @@ export function ContentList(props: WidgetContext<ContentListEntity>) {
     props.model.Properties.ListSettings.LimitItemsCount = props.model.Properties.ListSettings.LimitItemsCount || 20;
     props.model.Properties.SelectExpression = props.model.Properties.SelectExpression || "*";
     props.model.Properties.SelectionGroupLogicalOperator = props.model.Properties.SelectionGroupLogicalOperator || "AND";
+    props.model.Properties.SfViewName = props.model.Properties.SfViewName || "CardsList";
 
     useEffect(() => {
         if (props.model.Properties.ContentViewDisplayMode === "Automatic") {
@@ -65,7 +66,7 @@ export function ContentList(props: WidgetContext<ContentListEntity>) {
     );
 }
 
-function getAttributesWithClasses(props: WidgetContext<ContentListEntity>, fieldName: string, additiinalClasses: string | null): Array<{ Key: string, Value: string}> {
+function getAttributesWithClasses(props: WidgetContext<ContentListEntity>, fieldName: string, additionalClasses: string | null): Array<{ Key: string, Value: string}> {
     const viewCss = props.model.Properties.CssClasses.find(x => x.FieldName === fieldName);
 
     const contentListAttributes = props.model.Properties.Attributes["ContentList"] || [];
@@ -83,8 +84,8 @@ function getAttributesWithClasses(props: WidgetContext<ContentListEntity>, field
         classAttribute.Value += ` ${viewCss.CssClass}`;
     }
 
-    if (additiinalClasses)
-        classAttribute.Value += ` ${additiinalClasses}`;
+    if (additionalClasses)
+        classAttribute.Value += ` ${additionalClasses}`;
 
     return contentListAttributes;
 }

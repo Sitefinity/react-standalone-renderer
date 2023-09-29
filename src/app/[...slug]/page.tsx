@@ -9,8 +9,6 @@ import { LayoutService } from '@/framework/sdk/services/layout.service';
 import { RenderWidgetService } from '@/framework/services/render-widget-service';
 import { WidgetModel } from '@/framework/widgets/widget-model';
 import { RequestContext } from '@/framework/services/request-context';
-import { widgets } from '@/widget-registry';
-import { RendererContractImpl } from '@/renderer-contract';
 
 // export async function generateStaticParams() {
 //     const getAllArgs: GetAllArgs = {
@@ -60,7 +58,7 @@ export default async function Page({ params, searchParams }: PageParams) {
             headers['X-SF-BYPASS-HOST'] = `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`;
             headers['X-SF-BYPASS-HOST-VALIDATION-KEY'] = process.env.SF_CLOUD_KEY;
         } else {
-            headers["x-original-host"] = `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`;
+            headers["X-ORIGINAL-HOST"] = `${process.env.PROXY_ORIGINAL_HOST}:${process.env.PORT}`;
         }
     }
 
@@ -86,12 +84,11 @@ export default async function Page({ params, searchParams }: PageParams) {
         widgets: layout.ComponentContext.Components
     };
 
-    let renderWidgetService = new RenderWidgetService(widgets);
     return (
         <Fragment>
             <PageClient metadata={ServiceMetadata.serviceMetadataCache} layout={layout} context={appState.requestContext} />
             {appState.widgets.map((child) => {
-                return renderWidgetService.createComponent(child, appState.requestContext);
+                return RenderWidgetService.createComponent(child, appState.requestContext);
             })}
         </Fragment>
     )

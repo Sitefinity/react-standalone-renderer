@@ -2,15 +2,11 @@ import { RendererContract, ComponentMetadata, GetWidgetMetadataArgs, RenderWidge
 import { RenderWidgetService } from "./framework/services/render-widget-service";
 import { createRoot } from "react-dom/client";
 import { RequestContext } from "./framework/services/request-context";
+import { widgetRegistry } from "./widget-registry";
 
 export class RendererContractImpl implements RendererContract {
 
-    constructor(private readonly renderWidgetService: RenderWidgetService) {
-
-    }
-
     getWidgetMetadata(args: GetWidgetMetadataArgs): Promise<ComponentMetadata> {
-        const widgetRegistry = this.renderWidgetService.registry;
         const designerMetadata = widgetRegistry.widgets[args.widgetName].designerMetadata;
         return Promise.resolve(designerMetadata);
     }
@@ -26,7 +22,7 @@ export class RendererContractImpl implements RendererContract {
                 culture: args.dataItem.culture
             };
 
-            const component = this.renderWidgetService.createComponent(args.model, context);
+            const component = RenderWidgetService.createComponent(args.model, context);
 
             createRoot(tempElement).render(component);
             // ReactDOM.render(component, tempElement);
@@ -41,11 +37,10 @@ export class RendererContractImpl implements RendererContract {
     }
 
     getWidgets(args: GetWidgetsArgs): Promise<TotalCountResult<WidgetSection[]>> {
-        const widgetEntries = this.renderWidgetService.registry.widgets;
         const filteredWidgets: WidgetItem[] = [];
 
-        Object.keys(widgetEntries).forEach((key) => {
-            const widgetEntry = widgetEntries[key];
+        Object.keys(widgetRegistry.widgets).forEach((key) => {
+            const widgetEntry = widgetRegistry.widgets[key];
             if ((widgetEntry.selectorCategory === args.category) || (!widgetEntry.selectorCategory && args.category === "Content")) {
                 filteredWidgets.push({
                     name: key,

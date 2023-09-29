@@ -7,7 +7,7 @@ import sitefinityContentBlockJson from './components/content-block/designer-meta
 import sitefinitySectionJson from './components/section/designer-metadata.json';
 import sitefinityContentListJson from './components/content-list/designer-metadata.json';
 
-export const widgets: WidgetRegistry = {
+export const widgetRegistry: WidgetRegistry = {
     widgets: {
         "SitefinityContentBlock":  {
             designerMetadata: sitefinityContentBlockJson,

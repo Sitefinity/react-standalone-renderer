@@ -8,8 +8,12 @@ import { LayoutService } from './framework/sdk/services/layout.service';
 import { RenderWidgetService } from './framework/services/render-widget-service';
 import { RequestContext } from './framework/services/request-context';
 import { WidgetModel } from './framework/widgets/widget-model';
+import { widgetRegistry } from './widget-registry';
 
 export function App() {
+    RenderWidgetService.widgetRegistry = widgetRegistry;
+    RootUrlService.rootUrl = `${window.location.origin}/`;
+
     const [appState, setAppState] = useState<AppState>();
 
     useEffect(() => {
@@ -79,7 +83,7 @@ function renderScripts(response: PageLayoutServiceResponse, rootElement: HTMLEle
         const scriptElement = document.createElement('script');
         if (script.Source) {
             if (script.Source[0] === '/') {
-                script.Source = RootUrlService.getUrl() + script.Source.substring(1);
+                script.Source = RootUrlService.rootUrl + script.Source.substring(1);
             }
 
             scriptElement.setAttribute('src', script.Source);

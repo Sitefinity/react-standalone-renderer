@@ -24,7 +24,7 @@ export function htmlAttributes(widgetContext: WidgetContext<any>) {
         }
     }
 
-    attributes["data-sfiscontentwidget"] = widgetContext.metadata.selectorCategory !== "Layout & Presets";
+    attributes["data-sfiscontentwidget"] = widgetContext.metadata.selectorCategory !== "Layout";
     attributes["data-sfisemptyvisualhidden"] = false;
 
     return attributes;

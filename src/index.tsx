@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { getRootElement } from './App';
+import App from './App';
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
@@ -10,7 +10,7 @@ import {
     Routes
 } from "react-router-dom";
 
-createRoot(getRootElement())
+createRoot(document.body)
 .render(
     // <React.StrictMode>
     <Router>

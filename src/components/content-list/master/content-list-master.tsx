@@ -95,7 +95,7 @@ export function ContentListMaster(props: { model: ContentListModelMaster }) {
                 setData({ viewName: model.ViewName, model: viewModel });
             }
         });
-    }, [props.model]);
+    }, [props]);
 
     return (
         <Fragment>

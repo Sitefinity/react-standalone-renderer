@@ -46,10 +46,10 @@ export class RendererContractImpl implements RendererContract {
 
         Object.keys(widgetEntries).forEach((key) => {
             const widgetEntry = widgetEntries[key];
-            if (widgetEntry.selectorCategory === args.category) {
+            if ((widgetEntry.selectorCategory === args.category) || (!widgetEntry.selectorCategory && args.category === "Content")) {
                 filteredWidgets.push({
                     name: key,
-                    title: widgetEntry.editorMetadata?.Title,
+                    title: widgetEntry.editorMetadata?.Title || key,
                 });
             }
         });

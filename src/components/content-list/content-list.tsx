@@ -85,6 +85,7 @@ export function ContentList(props: WidgetContext<ContentListEntity>) {
     props.model.Properties.ListSettings.LimitItemsCount = props.model.Properties.ListSettings.LimitItemsCount || 20;
     props.model.Properties.SelectExpression = props.model.Properties.SelectExpression || "*";
     props.model.Properties.SelectionGroupLogicalOperator = props.model.Properties.SelectionGroupLogicalOperator || "AND";
+    props.model.Properties.SfViewName = props.model.Properties.SfViewName || "CardsList";
 
     useEffect(() => {
         if (props.model.Properties.ContentViewDisplayMode === "Automatic") {

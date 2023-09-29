@@ -14,7 +14,7 @@ export class RestService {
             $select: "*"
         })}`;
 
-        return fetch(wholeUrl).then(x => x.json());
+        return fetch(wholeUrl, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
     }
 
     public static getItemWithStatus<T extends SdkItem>(itemType: string, id: string, provider: string, queryParams: {[key: string]: string}): Promise<T> {
@@ -26,7 +26,7 @@ export class RestService {
         queryParamsForMethod = Object.assign(queryParamsForMethod, queryParams)
         const wholeUrl = `${RestService.buildItemBaseUrl(itemType)}(${id})/Default.GetItemWithStatus()${RestService.buildQueryParams(queryParamsForMethod)}`
 
-        return fetch(wholeUrl).then(x => x.json());
+        return fetch(wholeUrl, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
     }
 
     public static getItem<T extends SdkItem>(itemType: string, id: string, provider: string): Promise<T> {
@@ -37,7 +37,7 @@ export class RestService {
 
         const wholeUrl = `${this.buildItemBaseUrl(itemType)}(${id})${this.buildQueryParams(queryParamsForMethod)}`
 
-        return fetch(wholeUrl).then(x => x.json());
+        return fetch(wholeUrl, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
     }
 
     public static getSharedContent(id: string, cultureName: string): Promise<GenericContentItem> {
@@ -46,7 +46,7 @@ export class RestService {
             sf_fallback_prop_names: "Content"
         };
 
-        return fetch(`${RestService.buildItemBaseUrl(RestSdkTypes.GenericContent)}/Default.GetItemById(itemId=${id})${RestService.buildQueryParams(queryParamsForMethod)}`).then(x => x.json());
+        return fetch(`${RestService.buildItemBaseUrl(RestSdkTypes.GenericContent)}/Default.GetItemById(itemId=${id})${RestService.buildQueryParams(queryParamsForMethod)}`, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
     }
 
     public static getItems<T extends SdkItem>(args: GetAllArgs): Promise<CollectionResponse<T>> {
@@ -69,7 +69,7 @@ export class RestService {
         queryParamsForMethod = Object.assign(queryParamsForMethod, args.AdditionalQueryParams);
 
         const wholeUrl = `${this.buildItemBaseUrl(args.Type)}${this.buildQueryParams(queryParamsForMethod)}`;
-        return fetch(wholeUrl).then((x => x.json())).then((x) => {
+        return fetch(wholeUrl, { headers: { "X-Requested-With": "react" } }).then((x => x.json())).then((x) => {
             return <CollectionResponse<T>>{ Items: x.value, TotalCount: x["@odata.count"] }
         });
     }

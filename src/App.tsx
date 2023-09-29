@@ -21,12 +21,18 @@ const widgets: WidgetRegistry = {
     widgets: {
         "SitefinityContentBlock":  {
             designerMetadata: sitefinityContentBlockJson,
-            componentType: ContentBlock
+            componentType: ContentBlock,
+            editorMetadata: {
+                Title: "Content block"
+            }
         },
         "SitefinitySection": {
             designerMetadata: sitefinitySectionJson,
             componentType: Section,
-            selectorCategory: 'Layout & Presets'
+            selectorCategory: 'Layout',
+            editorMetadata: {
+                Title: "Section"
+            }
         },
         "SitefinityContentList": {
             designerMetadata: sitefinityContentListJson,
@@ -35,7 +41,7 @@ const widgets: WidgetRegistry = {
                 Title: "Content list",
                 EmptyIconText: "Select content",
                 EmptyIcon: "plus-circle",
-            }
+            },
         }
     }
 }

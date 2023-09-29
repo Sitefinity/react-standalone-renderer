@@ -7,7 +7,6 @@ import { PageLayoutServiceResponse } from './framework/sdk/services/layout-servi
 import { LayoutService } from './framework/sdk/services/layout.service';
 import { RenderWidgetService } from './framework/services/render-widget-service';
 import { RequestContext } from './framework/services/request-context';
-import { widgets } from './widget-registry';
 import { WidgetModel } from './framework/widgets/widget-model';
 
 export function App() {
@@ -50,7 +49,7 @@ export function App() {
                     if ((layout.ComponentContext.Components.length > 0 && rootElement.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
 
-                        (window as any)["rendererContract"] = new RendererContractImpl(new RenderWidgetService(widgets));
+                        (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
                 }, 1000);
@@ -64,11 +63,10 @@ export function App() {
 
     }, []);
 
-    const renderWidgetService = new RenderWidgetService(widgets);
     return (
         <Fragment>
             {appState?.widgets.map((child) => {
-                return renderWidgetService.createComponent(child, appState.requestContext);
+                return RenderWidgetService.createComponent(child, appState.requestContext);
             })}
         </Fragment>
     )

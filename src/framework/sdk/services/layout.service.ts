@@ -4,7 +4,7 @@ import { LazyComponentsResponse } from "./lazy-components.response";
 
 export class LayoutService {
 
-    public static get(pagePath: string, action: string | null): Promise<PageLayoutServiceResponse> {
+    public static get(pagePath: string, action: string | null, headers: { [key: string]: string } = {}): Promise<PageLayoutServiceResponse> {
         let url = null;
 
         let indexOfSitefinityTemplate = pagePath.indexOf("Sitefinity/Template/");
@@ -33,8 +33,9 @@ export class LayoutService {
         }
 
         url = RootUrlService.getUrl() + url.substring(1);
+        headers["X-Requested-With"] = "react";
 
-        return fetch(url, { headers: { "X-Requested-With": "react" } }).then(x => x.json());
+        return fetch(url, { headers }).then(x => x.json());
     }
 
     public static getLazyComponents(pagePathAndQuery: string): Promise<LazyComponentsResponse> {

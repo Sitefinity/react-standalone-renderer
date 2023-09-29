@@ -11,6 +11,8 @@ import { RootUrlService } from "../../framework/sdk/root-url.service";
 import { WidgetContext } from "../../framework/widgets/widget-context";
 import { htmlAttributes } from "../../framework/widgets/attributes";
 import { RequestContext } from "../../framework/services/request-context";
+import { RenderWidgetService } from "../../framework/services/render-widget-service";
+import { widgetRegistry } from "../../widget-registry";
 
 const ColumnNamePrefix = "Column";
 const sectionKey = "Section";
@@ -45,7 +47,7 @@ export function Section(props: WidgetContext<SectionEntity>) {
                 return (
                     <div key={i} {...x.Attributes} style={data.section.Style}>
                         {x.Children.map(y => {
-                            return props.renderWidgetService.createComponent(y.model, data.requestContext)
+                            return RenderWidgetService.createComponent(y.model, data.requestContext)
                         })}
                     </div>
                 )
@@ -68,8 +70,7 @@ function populateColumns(context: WidgetContext<SectionEntity>): ColumnHolder[] 
             children = context.model.Children.filter(x => x.PlaceHolder === currentName).map((x => {
                 let ret: WidgetContext<any> = {
                     model: x,
-                    metadata: context.renderWidgetService.registry.widgets[x.Name],
-                    renderWidgetService: context.renderWidgetService,
+                    metadata: widgetRegistry.widgets[x.Name],
                     requestContext: context.requestContext
                 }
 

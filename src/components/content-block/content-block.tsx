@@ -12,13 +12,13 @@ export function ContentBlock(props: WidgetContext<ContentBlockEntity>) {
             dataAttributes["class"] = props.model.Properties.WrapperCssClass;
 
         if (props.model.Properties && props.model.Properties.SharedContentID) {
-            const fetchDdata = async () => {
+            const fetchData = async () => {
                 const res = await RestService.getSharedContent(props.model.Properties.SharedContentID, props.requestContext.culture)
 
                 setData({ content: res.Content, attributes: dataAttributes });
             };
 
-            fetchDdata();
+            fetchData();
         } else {
             setData({ content: props.model.Properties.Content || "", attributes: dataAttributes });
         }
@@ -47,3 +47,6 @@ export class ContentBlockEntity {
     SharedContentID!: string;
     WrapperCssClass!: string;
 }
+
+
+

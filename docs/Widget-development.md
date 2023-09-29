@@ -14,12 +14,13 @@ In order to build our own custom widget, we need to first create a folder that w
 ``` typescript
 
 import React from "react";
-import { ModelBase } from "../interfaces";
-import { htmlAttributes } from "../../services/render-widget-service";
-export function HelloWorldComponent(props: ModelBase<HelloWorldEntity>) {
-    const dataAttributes = htmlAttributes(props, null, null);
+import { WidgetContext } from "../../framework/widgets/widget-context";
+import { htmlAttributes } from "../../framework/widgets/attributes";
+
+export function HelloWorldComponent(props: WidgetContext<HelloWorldEntity>) {
+    const dataAttributes = htmlAttributes(props);
     return (
-        <h1 {...dataAttributes}>{props.Properties.Message}</h1>
+        <h1 {...dataAttributes}>{props.model.Properties.Message}</h1>
     );
 }
 
@@ -85,49 +86,22 @@ Second - we need to define the designer. This is done by creating a 'designer-me
 ### Registration with the renderer framework
 Once we have the above two files ready, we need to register the component implementation and the designer metadata with the React Renderer.
 
-For the component we need to go to the file [render-widget-service](./src/services/render-widget-service.tsx) and to add a new entry to the TYPES_MAP object like so:
+For the component we need to go to the file [render-widget-service](../src/widget-registry.ts) and to add a new entry to the TYPES_MAP object like so:
 
-``` typescript
-
-import { HelloWorldComponent } from "../components/hello-world/hello-world";
-
-export const TYPES_MAP = {
-    "SitefinityContentBlock": ContentBlock,
-    "SitefinitySection": Section,
-    "SitefinityContentList": ContentList,
-    "HelloWorld": HelloWorldComponent
-};
-
-```
-
-For the designer we need to go to the file [renderer-contract](./src/editor/renderer-contract.ts) and in the metadataMap object to add a new entry like so:
 ``` typescript
 
 import helloWorldJson from '../components/hello-world/designer-metadata.json';
+import { HelloWorldComponent } from "../components/hello-world/hello-world";
 
-export class RendererContractImpl implements RendererContract {
-    private metadataMap: { [key: string]: any } = {
-        "SitefinityContentBlock": sitefinityContentBlockJson,
-        "SitefinitySection": sitefinitySectionJson,
-        "SitefinityContentList": sitefinityContentListJson,
-        "HelloWorld": helloWorldJson
+ "HelloWorld":  {
+    designerMetadata: helloWorldJson,
+    componentType: HelloWorldComponent,
+    editorMetadata: {
+        Title: "Hello World"
     }
+},
 
 ```
-
-Finally we need to register the widget to be shown in the widget selector interface. Go to the file [content-widgets.json](./src/editor/designer-metadata/content-widgets.json) and add a new entry after the SitefinityContentBlock registration:
-
-``` json
-{
-    "name": "HelloWorld",
-    "addWidgetName": null,
-    "addWidgetTitle": null,
-    "title": "Hello world",
-    "initialProperties": []
-}
-```
-
-Notice that everywhere above we are using the 'HelloWorld' name to register our component. This is a unique identifier for out component and is used everywhere where it is referenced.
 
 ## Deep dive
 ### Building the component

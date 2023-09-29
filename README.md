@@ -23,7 +23,5 @@ The sample supports:
 
 To quickly set-up a dev environment, look at the docs in [**CI & CD**](./docs/CI-CD.md).
 
-To view how to set-up server-side rendering or static file generation with next.js look at [**the Next.js docs**](./docs/Next.js.md)
-
 To learn more about widget development, look at [**Widget development**](./docs/Widget-development.md)
 

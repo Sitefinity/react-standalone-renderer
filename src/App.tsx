@@ -1,100 +1,66 @@
 
 import React, { useEffect, useState, Fragment } from 'react';
-import { ModelBase, PageContentServiceResponse } from './components/interfaces';
-import { useLocation } from 'react-router-dom';
-import { RendererContractImpl } from './editor/renderer-contract';
-import { RenderContext } from './services/render-context';
-import { RenderWidgetService } from './services/render-widget-service';
-import { RequestContext } from './services/request-context';
-import { LayoutService } from './sdk/services/layout.service';
-import { ServiceMetadata, ServiceMetadataDefinition } from './sdk/service-metadata';
-import { PageLayoutServiceResponse } from './sdk/services/layout-service.response';
-import { CONFIG } from './config';
-import { RootUrlService } from './sdk/root-url.service';
+import { RendererContractImpl } from './renderer-contract';
+import { RootUrlService } from './framework/sdk/root-url.service';
+import { ServiceMetadata } from './framework/sdk/service-metadata';
+import { PageLayoutServiceResponse } from './framework/sdk/services/layout-service.response';
+import { LayoutService } from './framework/sdk/services/layout.service';
+import { RenderWidgetService } from './framework/services/render-widget-service';
+import { RequestContext } from './framework/services/request-context';
+import { WidgetModel } from './framework/widgets/widget-model';
+import { widgetRegistry } from './widget-registry';
 
-export interface AppState {
-    culture: string;
-    siteId: string;
-    content: ModelBase<any>[];
-    id: string;
-    requestContext: RequestContext
-}
+export function App() {
+    RenderWidgetService.widgetRegistry = widgetRegistry;
+    RootUrlService.rootUrl = `${window.location.origin}/`;
 
-type Props = {
-    metadata: ServiceMetadataDefinition | undefined
-    layout: PageLayoutServiceResponse | undefined
-}
+    const [appState, setAppState] = useState<AppState>();
 
-export function App({ metadata, layout }: Props) {
-    const [pageData, setPageData] = useState<AppState>();
     useEffect(() => {
         const getLayout = async () => {
-            
-            if (!metadata) {
-                await ServiceMetadata.fetch();
-            } else {
-                ServiceMetadata.serviceMetadataCache = metadata;
-            }
-            
-            if (!layout) {
-                layout = await LayoutService.get(window.location.pathname, RenderContext.isEdit());
-            }
-            
-            if (!layout.ComponentContext.HasLazyComponents || RenderContext.isEdit()) {
-                setPageData({
-                    culture: layout.Culture,
-                    siteId: layout.SiteId,
-                    content: layout.ComponentContext.Components,
-                    id: layout.Id,
-                    requestContext: {
-                        DetailItem: layout.DetailItem,
-                        LazyComponentMap: null,
-                    }
-                });
-            }
-            
-            getRootElement().classList.add("container-fluid");
-            if (RenderContext.isEdit()) {
+            await ServiceMetadata.fetch();
+            var query = new URL(window.location.toString()).searchParams;
+
+            const layout = await LayoutService.get(window.location.pathname, query.get("sfaction"));
+
+            const requestContext: RequestContext = {
+                isEdit: window.location.search.indexOf("sfaction=edit") !== -1,
+                isPreview: window.location.search.indexOf("sfaction=preview") !== -1,
+                culture: layout.Culture,
+                detailItem: layout.DetailItem
+            };
+
+            setAppState({
+                requestContext,
+                widgets: layout.ComponentContext.Components
+            });
+
+            const rootElement = document.body;
+            rootElement.classList.add("container-fluid");
+            if (requestContext.isEdit) {
                 const timeout = 2000;
                 const start = new Date().getTime();
                 const handle = window.setInterval(() => {
                     if (!layout)
                         return;
-                    
-                    document.body.setAttribute('data-sfcontainer', '')
-                    getRootElement().setAttribute('data-sfcontainer', 'Body');
+
+                    document.body.setAttribute('data-sfcontainer', 'Body')
+
                     // we do not know the exact time when react has finished the rendering process.
                     // thus we check every 100ms for dom changes. A proper check would be to see if every single
                     // component is rendered
                     const timePassed = new Date().getTime() - start;
-                    if ((layout.ComponentContext.Components.length > 0 && getRootElement().childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
+                    if ((layout.ComponentContext.Components.length > 0 && rootElement.childElementCount > 0) || layout.ComponentContext.Components.length === 0 || timePassed > timeout) {
                         window.clearInterval(handle);
-                        
+
                         (window as any)["rendererContract"] = new RendererContractImpl();
                         window.dispatchEvent(new Event('contractReady'));
                     }
                 }, 1000);
-            } else if (layout.ComponentContext.HasLazyComponents && !RenderContext.isEdit()) {
-                const lazy = await LayoutService.getLazyComponents(window.location.href);
-                const lazyComponentsMap: {[key: string]: ModelBase<any>} = {};
-                lazy.Components.forEach((component) => {
-                    lazyComponentsMap[component.Id] = component;
-                });
-
-                setPageData({
-                    culture: layout.Culture,
-                    siteId: layout.SiteId,
-                    content: layout.ComponentContext.Components,
-                    id: layout.Id,
-                    requestContext: {
-                        DetailItem: layout.DetailItem,
-                        LazyComponentMap: lazyComponentsMap,
-                    }
-                });
             }
 
             renderSeoMeta(layout);
-            renderScripts(layout);
+            renderScripts(layout, rootElement);
         }
 
         getLayout();
@@ -103,8 +69,8 @@ export function App({ metadata, layout }: Props) {
 
     return (
         <Fragment>
-            {pageData?.content.map((child) => {
-                return RenderWidgetService.createComponent(child, pageData.requestContext);
+            {appState?.widgets.map((child) => {
+                return RenderWidgetService.createComponent(child, appState.requestContext);
             })}
         </Fragment>
     )
@@ -112,12 +78,12 @@ export function App({ metadata, layout }: Props) {
 
 export default App;
 
-function renderScripts(response: PageLayoutServiceResponse) {
+function renderScripts(response: PageLayoutServiceResponse, rootElement: HTMLElement) {
     response.Scripts.forEach((script) => {
         const scriptElement = document.createElement('script');
         if (script.Source) {
             if (script.Source[0] === '/') {
-                script.Source = RootUrlService.getUrl() + script.Source.substring(1);
+                script.Source = RootUrlService.rootUrl + script.Source.substring(1);
             }
 
             scriptElement.setAttribute('src', script.Source);
@@ -131,7 +97,7 @@ function renderScripts(response: PageLayoutServiceResponse) {
             scriptElement.innerText = script.Value;
         }
 
-        getRootElement().appendChild(scriptElement);
+        rootElement.appendChild(scriptElement);
     });
 }
 
@@ -147,7 +113,7 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
             "og:description": response.MetaInfo.OpenGraphDescription,
             "og:site": response.MetaInfo.OpenGraphSite,
         }
-    
+
         Object.keys(metaMap).forEach((key) => {
             const metaElement = document.createElement("meta");
             metaElement.setAttribute('property', key);
@@ -157,13 +123,13 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
                 document.head.appendChild(metaElement);
             }
         });
-    
+
         if (response.MetaInfo.Description) {
             const metaElement = document.createElement("meta");
             metaElement.setAttribute('description', response.MetaInfo.Description);
             document.head.appendChild(metaElement);
         }
-    
+
         if (response.MetaInfo.CanonicalUrl) {
             const linkElement = document.createElement("link");
             linkElement.setAttribute("rel", "canonical");
@@ -173,6 +139,7 @@ function renderSeoMeta(response: PageLayoutServiceResponse) {
     }
 }
 
-export function getRootElement(): HTMLElement {
-    return (document.getElementById("root") || document.getElementById("__next")) as HTMLElement;
+interface AppState {
+    requestContext: RequestContext;
+    widgets: WidgetModel<any>[];
 }

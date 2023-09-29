@@ -1,17 +1,16 @@
-import { ContentContext, ContentVariation } from "../../editor/designer-entities/mixed-content-context";
-import { CombinedFilter } from "../../sdk/filters/combined-filter";
-import { FilterClause, FilterOperators } from "../../sdk/filters/filter-clause";
-import { OrderBy } from "../../sdk/filters/orderby";
-import { RelationFilter } from "../../sdk/filters/relation-filter";
-import { RestService } from "../../sdk/rest-service";
-import { ServiceMetadata } from "../../sdk/service-metadata";
-import { GetAllArgs } from "../../sdk/services/get-all-args";
-import { DetailItem } from "../../sdk/services/detail-item";
+import { ContentVariation, ContentContext } from "../../framework/widgets/entities/mixed-content-context";
+import { CollectionResponse } from "../../framework/sdk/dto/collection-response";
+import { SdkItem } from "../../framework/sdk/dto/sdk-item";
+import { CombinedFilter } from "../../framework/sdk/filters/combined-filter";
+import { FilterClause, FilterOperators } from "../../framework/sdk/filters/filter-clause";
+import { OrderBy } from "../../framework/sdk/filters/orderby";
+import { RelationFilter } from "../../framework/sdk/filters/relation-filter";
+import { RestService } from "../../framework/sdk/rest-service";
+import { ServiceMetadata } from "../../framework/sdk/service-metadata";
+import { DetailItem } from "../../framework/sdk/services/detail-item";
+import { GetAllArgs } from "../../framework/sdk/services/get-all-args";
 import { ContentListEntity } from "./content-list-entity";
 import { DateOffsetPeriod } from "./date-offset-period";
-import { CollectionResponse } from "../../sdk/dto/collection-response";
-import { SdkItem } from "../../sdk/dto/sdk-item";
-
 
 export class ContentListRestService {
 

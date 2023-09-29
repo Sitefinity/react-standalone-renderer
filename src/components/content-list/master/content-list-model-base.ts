@@ -1,6 +1,6 @@
-import { SdkItem } from "../../../sdk/dto/sdk-item"
+import { SdkItem } from "../../../framework/sdk/dto/sdk-item"
 
-export interface ContentListModelbase {
+export interface ContentListModelBase {
     Attributes: {[key: string]: string}
     OpenDetails: boolean
     Pager?: {}

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
-import { SdkItem } from "../../../../sdk/dto/sdk-item";
 import { ListWithImageModel } from "./list-with-image-model";
+import { SdkItem } from "../../../../framework/sdk/dto/sdk-item";
 
 export function ListWithImage(props: { model: ListWithImageModel }) {
     const model = props.model;

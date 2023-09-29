@@ -1,21 +1,4 @@
-import { RequestContext } from "../services/request-context";
-
-export interface ModelBase<T> {
-    Id: string;
-    Name: string;
-    Caption: string;
-
-    Lazy: boolean;
-    ViewName: string;
-    PlaceHolder: string;
-    Properties: T;
-    Children: ModelBase<any>[];
-
-    Culture: string;
-    SiteId: string;
-    
-    requestContext: RequestContext
-}
+import { WidgetModel } from "../framework/widgets/widget-model";
 
 export interface MetaInfo {
     CanonicalUrl: string;
@@ -51,7 +34,7 @@ export interface PageContentServiceResponse {
 }
 
 export interface ComponentContext {
-    Components: ModelBase<any>[];
+    Components: WidgetModel<any>[];
     HasLazyComponents: boolean;
 }
 

@@ -13,7 +13,7 @@ Running in dev mode **does not require installing additional software and works 
 ```
 2. Go to [.env.development file](/.env.development) and set the 'PROXY_URL' variable to point to the URL of the CMS.
 
-3. Setup the CMS to allow poxing requests from localhost
+3. Setup the CMS to allow proxying requests from localhost
 
    If CMS is hosted on azure -> [instructions](https://www.progress.com/documentation/sitefinity-cms/host-the-asp.net-core-rendered-application#configure-sitefinity-cms-for-azure-app-services)
 
